@@ -13,9 +13,8 @@ interface MessengerWithTokenInterface
 {
     /**
      * @param string $token
-     * @return MessengerWithTokenInterface
      */
-    public function setAccessToken(string $token): self;
+    public function setAccessToken(string $token);
 
     /**
      * @return string
