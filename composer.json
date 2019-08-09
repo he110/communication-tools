@@ -1,0 +1,35 @@
+{
+  "name": "he110/communication-tools",
+  "description": "Tools set for messenger managing. Allows you to send any content via Telegram, Viber, WhatsApp, VK and so on",
+  "keywords": ["telegram-bot", "whatsapp-bot", "viber-bot", "facebook-bot", "vk-bot", "php"],
+  "homepage": "https://github.com/he110/communication-tools",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Ilya S. Zobenko",
+      "email": "ilya@zobenko.ru",
+      "homepage": "https://zobenko.ru"
+    }
+  ],
+  "require": {
+    "php": ">=7.2"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^8"
+  },
+  "autoload": {
+    "psr-4": {"He110\\CommunicationTools\\": "src/"},
+    "exclude-from-classmap": [
+      "tests/"
+    ]
+  },
+  "autoload-dev": {
+    "psr-4": {"He110\\CommunicationToolsTests\\": "tests/"}
+  },
+  "scripts": {
+    "test": [
+      "phpunit"
+    ]
+  }
+}
