@@ -24,7 +24,7 @@ class MessengerPool implements MessengerInterface
     public function add(MessengerInterface $messenger): self
     {
         $targetUserId = $this->getTargetUser();
-        if (in_array($messenger, $this->messengers))
+        if (!in_array($messenger, $this->messengers))
             array_push($this->messengers, $messenger);
 
         if ($targetUserId !== "")
@@ -72,6 +72,16 @@ class MessengerPool implements MessengerInterface
         if (0 <= $key = $this->indexOf($messenger))
             $this->removeByKey($key);
         return $this;
+    }
+
+    /**
+     * Returns all added messengers from collection
+     *
+     * @return MessengerInterface[]
+     */
+    public function getList(): array
+    {
+       return $this->messengers;
     }
 
     /**

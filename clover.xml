@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1565392490">
+  <project timestamp="1565392490">
+    <file name="/Users/he110/Documents/PHP/CommunicationTools/src/MessengerEventsInterface.php">
+      <metrics loc="32" ncloc="26" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+    </file>
+    <file name="/Users/he110/Documents/PHP/CommunicationTools/src/MessengerInterface.php">
+      <metrics loc="76" ncloc="20" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+    </file>
+    <package name="He110\CommunicationTools">
+      <file name="/Users/he110/Documents/PHP/CommunicationTools/src/MessengerPool.php">
+        <class name="He110\CommunicationTools\MessengerPool" namespace="He110\CommunicationTools">
+          <metrics complexity="30" methods="12" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="45" coveredstatements="4" elements="57" coveredelements="5"/>
+        </class>
+        <line num="24" type="method" name="add" visibility="public" complexity="5" crap="30.00" count="0"/>
+        <line num="26" type="stmt" count="0"/>
+        <line num="27" type="stmt" count="0"/>
+        <line num="28" type="stmt" count="0"/>
+        <line num="30" type="stmt" count="0"/>
+        <line num="31" type="stmt" count="0"/>
+        <line num="32" type="stmt" count="0"/>
+        <line num="33" type="stmt" count="0"/>
+        <line num="35" type="stmt" count="0"/>
+        <line num="44" type="method" name="indexOf" visibility="public" complexity="2" crap="2" count="1"/>
+        <line num="46" type="stmt" count="1"/>
+        <line num="47" type="stmt" count="1"/>
+        <line num="48" type="stmt" count="1"/>
+        <line num="49" type="stmt" count="1"/>
+        <line num="58" type="method" name="removeByKey" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="60" type="stmt" count="0"/>
+        <line num="61" type="stmt" count="0"/>
+        <line num="70" type="method" name="remove" visibility="public" complexity="2" crap="6.00" count="0"/>
+        <line num="72" type="stmt" count="0"/>
+        <line num="73" type="stmt" count="0"/>
+        <line num="74" type="stmt" count="0"/>
+        <line num="82" type="method" name="getList" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="84" type="stmt" count="0"/>
+        <line num="90" type="method" name="setTargetUser" visibility="public" complexity="2" crap="6.00" count="0"/>
+        <line num="92" type="stmt" count="0"/>
+        <line num="93" type="stmt" count="0"/>
+        <line num="94" type="stmt" count="0"/>
+        <line num="100" type="method" name="getTargetUser" visibility="public" complexity="2" crap="6.00" count="0"/>
+        <line num="102" type="stmt" count="0"/>
+        <line num="103" type="stmt" count="0"/>
+        <line num="104" type="stmt" count="0"/>
+        <line num="105" type="stmt" count="0"/>
+        <line num="111" type="method" name="sendMessage" visibility="public" complexity="3" crap="12.00" count="0"/>
+        <line num="113" type="stmt" count="0"/>
+        <line num="114" type="stmt" count="0"/>
+        <line num="115" type="stmt" count="0"/>
+        <line num="116" type="stmt" count="0"/>
+        <line num="122" type="method" name="sendImage" visibility="public" complexity="3" crap="12.00" count="0"/>
+        <line num="124" type="stmt" count="0"/>
+        <line num="125" type="stmt" count="0"/>
+        <line num="126" type="stmt" count="0"/>
+        <line num="127" type="stmt" count="0"/>
+        <line num="133" type="method" name="sendDocument" visibility="public" complexity="3" crap="12.00" count="0"/>
+        <line num="135" type="stmt" count="0"/>
+        <line num="136" type="stmt" count="0"/>
+        <line num="137" type="stmt" count="0"/>
+        <line num="138" type="stmt" count="0"/>
+        <line num="144" type="method" name="sendVoice" visibility="public" complexity="3" crap="12.00" count="0"/>
+        <line num="146" type="stmt" count="0"/>
+        <line num="147" type="stmt" count="0"/>
+        <line num="148" type="stmt" count="0"/>
+        <line num="149" type="stmt" count="0"/>
+        <line num="155" type="method" name="sendScreen" visibility="public" complexity="3" crap="12.00" count="0"/>
+        <line num="157" type="stmt" count="0"/>
+        <line num="158" type="stmt" count="0"/>
+        <line num="159" type="stmt" count="0"/>
+        <line num="160" type="stmt" count="0"/>
+        <metrics loc="162" ncloc="104" classes="1" methods="12" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="45" coveredstatements="4" elements="57" coveredelements="5"/>
+      </file>
+      <file name="/Users/he110/Documents/PHP/CommunicationTools/src/MessengerScreen.php">
+        <class name="He110\CommunicationTools\MessengerScreen" namespace="He110\CommunicationTools">
+          <metrics complexity="9" methods="9" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="10" coveredstatements="0" elements="19" coveredelements="0"/>
+        </class>
+        <line num="17" type="method" name="addMessage" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="19" type="stmt" count="0"/>
+        <line num="22" type="method" name="addButtonText" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="24" type="stmt" count="0"/>
+        <line num="27" type="method" name="addButtonLink" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="29" type="stmt" count="0"/>
+        <line num="32" type="method" name="addButtonCallback" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="34" type="stmt" count="0"/>
+        <line num="37" type="method" name="addImage" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="39" type="stmt" count="0"/>
+        <line num="42" type="method" name="addDocument" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="44" type="stmt" count="0"/>
+        <line num="47" type="method" name="addVoice" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="49" type="stmt" count="0"/>
+        <line num="52" type="method" name="getContent" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="54" type="stmt" count="0"/>
+        <line num="57" type="method" name="resetContent" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="59" type="stmt" count="0"/>
+        <line num="60" type="stmt" count="0"/>
+        <metrics loc="61" ncloc="54" classes="1" methods="9" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="10" coveredstatements="0" elements="19" coveredelements="0"/>
+      </file>
+    </package>
+    <file name="/Users/he110/Documents/PHP/CommunicationTools/src/MessengerWithTokenInterface.php">
+      <metrics loc="23" ncloc="10" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+    </file>
+    <metrics files="5" loc="354" ncloc="214" classes="2" methods="21" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="55" coveredstatements="4" elements="76" coveredelements="5"/>
+  </project>
+</coverage>
