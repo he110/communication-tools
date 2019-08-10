@@ -18,12 +18,20 @@ class MessengerScreen
     /** @var ScreenItemInterface[] */
     protected $content = [];
 
+    /**
+     * @param string $text
+     * @return MessengerScreen
+     */
     public function addMessage(string $text): self
     {
         $this->content[] = Message::create(["text" => $text]);
         return $this;
     }
 
+    /**
+     * @param string $label
+     * @return MessengerScreen
+     */
     public function addButtonText(string $label): self
     {
         $this->content[] = Button::create([
@@ -33,13 +41,33 @@ class MessengerScreen
         return $this;
     }
 
+    /**
+     * @param string $label
+     * @param string $url
+     * @return MessengerScreen
+     */
     public function addButtonLink(string $label, string $url): self
     {
+        $this->content[] = Button::create([
+            "label" => $label,
+            "type" => Button::BUTTON_TYPE_URL,
+            "content" => $url
+        ]);
         return $this;
     }
 
+    /**
+     * @param string $label
+     * @param \Closure $closure
+     * @return MessengerScreen
+     */
     public function addButtonCallback(string $label, \Closure $closure): self
     {
+        $this->content[] = Button::create([
+            "label" => $label,
+            "type" => Button::BUTTON_TYPE_CALLBACK,
+            "content" => $closure
+        ]);
         return $this;
     }
 
