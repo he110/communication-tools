@@ -79,8 +79,6 @@ class Messenger implements MessengerInterface, MessengerWithTokenInterface
      * @throws AccessTokenException
      * @throws AttachmentNotFoundException
      * @throws TargetUserException
-     * @throws \TelegramBot\Api\Exception
-     * @throws \TelegramBot\Api\InvalidArgumentException
      */
     public function sendImage(string $pathToFile, string $description = null, array $buttons = []): bool
     {
@@ -91,11 +89,16 @@ class Messenger implements MessengerInterface, MessengerWithTokenInterface
 
         $document = new \CURLFile($pathToFile);
 
-        $this->client->sendPhoto($this->getTargetUser(), $document, $description);
+        try {
+            $result = $this->client->sendPhoto($this->getTargetUser(), $document, $description);
 
-        //TODO Сделать работу с кнопками
+            //TODO Сделать работу с кнопками
 
-        //TODO Сделать возврат булева значения
+            return method_exists($result, "getMessageId") && $result->getMessageId();
+        } catch (\Exception $exception) {
+            return false;
+        }
+
     }
 
     /**
@@ -108,8 +111,6 @@ class Messenger implements MessengerInterface, MessengerWithTokenInterface
      * @throws AccessTokenException
      * @throws AttachmentNotFoundException
      * @throws TargetUserException
-     * @throws \TelegramBot\Api\Exception
-     * @throws \TelegramBot\Api\InvalidArgumentException
      */
     public function sendDocument(string $pathToFile, string $description = null, array $buttons = []): bool
     {
@@ -120,11 +121,15 @@ class Messenger implements MessengerInterface, MessengerWithTokenInterface
 
         $document = new \CURLFile($pathToFile);
 
-        $this->client->sendDocument($this->getTargetUser(), $document, $description);
+        try {
+            $result = $this->client->sendDocument($this->getTargetUser(), $document, $description);
 
-        //TODO Сделать работу с кнопками
+            //TODO Сделать работу с кнопками
 
-        //TODO Сделать возврат булева значения
+            return method_exists($result, "getMessageId") && $result->getMessageId();
+        } catch (\Exception $exception) {
+            return false;
+        }
     }
 
     /**
@@ -135,8 +140,6 @@ class Messenger implements MessengerInterface, MessengerWithTokenInterface
      * @throws AccessTokenException
      * @throws AttachmentNotFoundException
      * @throws TargetUserException
-     * @throws \TelegramBot\Api\Exception
-     * @throws \TelegramBot\Api\InvalidArgumentException
      */
     public function sendVoice(string $pathToFile): bool
     {
@@ -147,9 +150,15 @@ class Messenger implements MessengerInterface, MessengerWithTokenInterface
 
         $document = new \CURLFile($pathToFile);
 
-        $this->client->sendVoice($this->getTargetUser(), $document);
+        try {
+            $result = $this->client->sendVoice($this->getTargetUser(), $document);
 
-        //TODO Сделать возврат булева значения
+            //TODO Сделать работу с кнопками
+
+            return method_exists($result, "getMessageId") && $result->getMessageId();
+        } catch (\Exception $exception) {
+            return false;
+        }
     }
 
     /**
