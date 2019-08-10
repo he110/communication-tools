@@ -19,7 +19,7 @@ class Message implements ScreenItemInterface
      */
     public function getText(): string
     {
-        return $this->text;
+        return $this->text ?? "";
     }
 
     /**
