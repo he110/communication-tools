@@ -15,17 +15,17 @@ interface MessengerInterface
      * Allows you to set target user ID.
      * It can be Telegram Client ID, or Viber User Token and other.
      *
-     * @param string $userId
+     * @param string|null $userId
      * @return mixed
      */
-    public function setTargetUser(string $userId);
+    public function setTargetUser(?string $userId);
 
     /**
      * Get target user ID.
      *
      * @return string
      */
-    public function getTargetUser(): string;
+    public function getTargetUser(): ?string;
 
     /**
      * Method, which sends a simple text messages.

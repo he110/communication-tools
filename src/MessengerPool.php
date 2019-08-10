@@ -87,7 +87,7 @@ class MessengerPool implements MessengerInterface
     /**
      * {@inheritdoc}
      */
-    public function setTargetUser(string $userId)
+    public function setTargetUser(?string $userId)
     {
         foreach ($this->messengers as $messenger)
             $messenger->setTargetUser($userId);
@@ -97,7 +97,7 @@ class MessengerPool implements MessengerInterface
     /**
      * {@inheritdoc}
      */
-    public function getTargetUser(): string
+    public function getTargetUser(): ?string
     {
         $messenger = reset($this->messengers);
         if ($messenger === false)

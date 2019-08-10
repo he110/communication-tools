@@ -31,7 +31,7 @@ class Messenger implements MessengerInterface, MessengerWithTokenInterface
     /**
      * {@inheritdoc}
      */
-    public function setTargetUser(string $userId)
+    public function setTargetUser(?string $userId)
     {
         $this->userId = $userId;
     }
@@ -39,7 +39,7 @@ class Messenger implements MessengerInterface, MessengerWithTokenInterface
     /**
      * {@inheritdoc}
      */
-    public function getTargetUser(): string
+    public function getTargetUser(): ?string
     {
         return $this->userId;
     }
@@ -52,18 +52,21 @@ class Messenger implements MessengerInterface, MessengerWithTokenInterface
      * @return bool
      * @throws AccessTokenException
      * @throws TargetUserException
-     * @throws \TelegramBot\Api\Exception
-     * @throws \TelegramBot\Api\InvalidArgumentException
      */
     public function sendMessage(string $text, array $buttons = []): bool
     {
         $this->checkRequirements();
 
-        $this->client->sendMessage($this->getTargetUser(), $text);
+        try {
+            $result = $this->client->sendMessage($this->getTargetUser(), $text);
 
-        //TODO Сделать работу с кнопками
+            //TODO Сделать работу с кнопками
 
-        //TODO Сделать возврат булева значения
+            return method_exists($result, "getMessageId") && $result->getMessageId();
+        } catch (\Exception $exception) {
+            return false;
+        }
+
     }
 
     /**
