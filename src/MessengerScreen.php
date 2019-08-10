@@ -9,6 +9,7 @@
 namespace He110\CommunicationTools;
 
 
+use He110\CommunicationTools\ScreenItems\Button;
 use He110\CommunicationTools\ScreenItems\Message;
 use He110\CommunicationTools\ScreenItems\ScreenItemInterface;
 
@@ -25,6 +26,10 @@ class MessengerScreen
 
     public function addButtonText(string $label): self
     {
+        $this->content[] = Button::create([
+            "label" => $label,
+            "type" => Button::BUTTON_TYPE_TEXT
+        ]);
         return $this;
     }
 
