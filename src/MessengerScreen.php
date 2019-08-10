@@ -9,13 +9,17 @@
 namespace He110\CommunicationTools;
 
 
+use He110\CommunicationTools\ScreenItems\Message;
+use He110\CommunicationTools\ScreenItems\ScreenItemInterface;
+
 class MessengerScreen
 {
-    /** @var array */
+    /** @var ScreenItemInterface[] */
     protected $content = [];
 
     public function addMessage(string $text): self
     {
+        $this->content[] = Message::create(["text" => $text]);
         return $this;
     }
 
@@ -49,11 +53,20 @@ class MessengerScreen
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function getContent(): array
     {
-        return $this->content;
+        $array = [];
+        foreach($this->content as $item)
+            $array[] = $item->toArray();
+        return $array;
     }
 
+    /**
+     * @return MessengerScreen
+     */
     public function resetContent(): self
     {
         $this->content = [];
