@@ -29,7 +29,7 @@ class Button implements ScreenItemInterface
      */
     public function getLabel(): string
     {
-        return $this->label;
+        return $this->label ?? "";
     }
 
     /**
@@ -65,7 +65,7 @@ class Button implements ScreenItemInterface
      */
     public function getType(): string
     {
-        return $this->type;
+        return $this->type ?? static::BUTTON_TYPE_TEXT;
     }
 
     /**
@@ -75,6 +75,7 @@ class Button implements ScreenItemInterface
     public function setType(string $type): self
     {
         $this->type = $type;
+        return $this;
     }
 
     /**
