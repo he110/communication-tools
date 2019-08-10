@@ -16,6 +16,7 @@ use He110\CommunicationTools\MessengerInterface;
 use He110\CommunicationTools\MessengerScreen;
 use He110\CommunicationTools\MessengerWithTokenInterface;
 use TelegramBot\Api\BotApi;
+use TelegramBot\Api\Types\Message;
 
 class Messenger implements MessengerInterface, MessengerWithTokenInterface
 {
@@ -83,18 +84,10 @@ class Messenger implements MessengerInterface, MessengerWithTokenInterface
     public function sendImage(string $pathToFile, string $description = null, array $buttons = []): bool
     {
         $this->checkRequirements();
-
-        if (!file_exists($pathToFile))
-            throw new AttachmentNotFoundException("Attachment not found");
-
-        $document = new \CURLFile($pathToFile);
-
+        $document = $this->prepareFile($pathToFile);
         try {
-            $result = $this->client->sendPhoto($this->getTargetUser(), $document, $description);
-
             //TODO Сделать работу с кнопками
-
-            return method_exists($result, "getMessageId") && $result->getMessageId();
+            return $this->checkRequestResult($this->client->sendPhoto($this->getTargetUser(), $document, $description));
         } catch (\Exception $exception) {
             return false;
         }
@@ -115,18 +108,10 @@ class Messenger implements MessengerInterface, MessengerWithTokenInterface
     public function sendDocument(string $pathToFile, string $description = null, array $buttons = []): bool
     {
         $this->checkRequirements();
-
-        if (!file_exists($pathToFile))
-            throw new AttachmentNotFoundException("Attachment not found");
-
-        $document = new \CURLFile($pathToFile);
-
+        $document = $this->prepareFile($pathToFile);
         try {
-            $result = $this->client->sendDocument($this->getTargetUser(), $document, $description);
-
             //TODO Сделать работу с кнопками
-
-            return method_exists($result, "getMessageId") && $result->getMessageId();
+            return $this->checkRequestResult($this->client->sendDocument($this->getTargetUser(), $document, $description));
         } catch (\Exception $exception) {
             return false;
         }
@@ -144,18 +129,10 @@ class Messenger implements MessengerInterface, MessengerWithTokenInterface
     public function sendVoice(string $pathToFile): bool
     {
         $this->checkRequirements();
-
-        if (!file_exists($pathToFile))
-            throw new AttachmentNotFoundException("Attachment not found");
-
-        $document = new \CURLFile($pathToFile);
-
+        $document = $this->prepareFile($pathToFile);
         try {
-            $result = $this->client->sendVoice($this->getTargetUser(), $document);
-
             //TODO Сделать работу с кнопками
-
-            return method_exists($result, "getMessageId") && $result->getMessageId();
+            return $this->checkRequestResult($this->client->sendVoice($this->getTargetUser(), $document));
         } catch (\Exception $exception) {
             return false;
         }
@@ -192,11 +169,30 @@ class Messenger implements MessengerInterface, MessengerWithTokenInterface
      */
     private function checkRequirements()
     {
-        if (is_null($this->client) || is_null($this->getAccessToken()))
+        if (is_null($this->client) || is_null($this->getAccessToken())) {
             throw new AccessTokenException("Telegram access token required");
+        }
 
-        if (empty($this->getTargetUser()))
+        if (empty($this->getTargetUser())) {
             throw new TargetUserException("Target Client ID required");
+        }
 
+    }
+
+    /**
+     * @param string $pathToFile
+     * @return \CURLFile
+     * @throws AttachmentNotFoundException
+     */
+    private function prepareFile(string $pathToFile): \CURLFile
+    {
+        if (!file_exists($pathToFile))
+            throw new AttachmentNotFoundException("Attachment not found");
+        return new \CURLFile($pathToFile);
+    }
+
+    private function checkRequestResult(Message $message): bool
+    {
+        return method_exists($message, "getMessageId") && $message->getMessageId();
     }
 }

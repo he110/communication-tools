@@ -51,6 +51,8 @@ class MessengerTest extends TestCase
     /**
      * @covers \He110\CommunicationTools\Telegram\Messenger::sendVoice()
      * @covers \He110\CommunicationTools\Telegram\Messenger::checkRequirements()
+     * @covers \He110\CommunicationTools\ScreenItems\Message::checkRequestResult()
+     * @covers \He110\CommunicationTools\ScreenItems\Message::prepareFile
      */
     public function testSendVoice()
     {
@@ -86,6 +88,8 @@ class MessengerTest extends TestCase
     /**
      * @covers \He110\CommunicationTools\Telegram\Messenger::sendImage()
      * @covers \He110\CommunicationTools\Telegram\Messenger::checkRequirements()
+     * @covers \He110\CommunicationTools\ScreenItems\Message::checkRequestResult()
+     * @covers \He110\CommunicationTools\ScreenItems\Message::prepareFile
      */
     public function testSendImage()
     {
@@ -109,6 +113,8 @@ class MessengerTest extends TestCase
     /**
      * @covers \He110\CommunicationTools\Telegram\Messenger::sendDocument()
      * @covers \He110\CommunicationTools\Telegram\Messenger::checkRequirements()
+     * @covers \He110\CommunicationTools\ScreenItems\Message::checkRequestResult()
+     * @covers \He110\CommunicationTools\ScreenItems\Message::prepareFile
      */
     public function testSendDocument()
     {
