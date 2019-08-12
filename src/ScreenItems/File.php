@@ -26,6 +26,9 @@ class File implements ScreenItemInterface
     /** @var int|null */
     private $size;
 
+    /** @var string */
+    private $description;
+
     /**
      * @return string|null
      */
@@ -100,6 +103,25 @@ class File implements ScreenItemInterface
     }
 
     /**
+     * @return string
+     */
+    public function getDescription(): string
+    {
+        return $this->description ?? "";
+    }
+
+    /**
+     * @param string $description
+     * @return File
+     */
+    public function setDescription(string $description): self
+    {
+        $this->description = $description;
+        return $this;
+    }
+
+
+    /**
      * {@inheritdoc}
      */
     public function toArray(): array
@@ -108,7 +130,8 @@ class File implements ScreenItemInterface
             "path" => $this->getPath(),
             "name" => $this->getName(),
             "size" => $this->getSize(),
-            "type" => $this->getType()
+            "type" => $this->getType(),
+            "description" => $this->getDescription()
         );
     }
 

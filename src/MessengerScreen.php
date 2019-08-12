@@ -9,7 +9,9 @@
 namespace He110\CommunicationTools;
 
 
+use He110\CommunicationTools\Exceptions\AttachmentNotFoundException;
 use He110\CommunicationTools\ScreenItems\Button;
+use He110\CommunicationTools\ScreenItems\File;
 use He110\CommunicationTools\ScreenItems\Message;
 use He110\CommunicationTools\ScreenItems\ScreenItemInterface;
 
@@ -71,14 +73,42 @@ class MessengerScreen
         return $this;
     }
 
+    /**
+     * @param string $pathToFile
+     * @param string $description
+     * @return MessengerScreen
+     * @throws AttachmentNotFoundException
+     */
     public function addImage(string $pathToFile, string $description = ""): self
     {
-        return $this;
+        if ($file = File::create([
+            "path" => $pathToFile,
+            "description" => $description,
+            "type" => File::FILE_TYPE_IMAGE
+        ])) {
+            $this->content[] = $file;
+            return $this;
+        }
+        throw new AttachmentNotFoundException("File not found");
     }
 
+    /**
+     * @param string $pathToFile
+     * @param string $description
+     * @return MessengerScreen
+     * @throws AttachmentNotFoundException
+     */
     public function addDocument(string $pathToFile, string $description = ""): self
     {
-        return $this;
+        if ($file = File::create([
+            "path" => $pathToFile,
+            "description" => $description,
+            "type" => File::FILE_TYPE_DOCUMENT
+        ])) {
+            $this->content[] = $file;
+            return $this;
+        }
+        throw new AttachmentNotFoundException("File not found");
     }
 
     public function addVoice(string $pathToFile): self

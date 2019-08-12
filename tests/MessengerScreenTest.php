@@ -10,6 +10,7 @@ namespace He110\CommunicationToolsTests;
 
 use He110\CommunicationTools\MessengerScreen;
 use He110\CommunicationTools\ScreenItems\Button;
+use He110\CommunicationToolsTests\ScreenItems\FileTest;
 use PHPUnit\Framework\TestCase;
 
 class MessengerScreenTest extends TestCase
@@ -17,9 +18,18 @@ class MessengerScreenTest extends TestCase
     /** @var MessengerScreen */
     private $screen;
 
+    /**
+     * @covers \He110\CommunicationTools\MessengerScreen::addDocument()
+     */
     public function testAddDocument()
     {
-
+        $this->assertEmpty($this->screen->getContent());
+        $this->screen->addDocument(FileTest::DOCUMENT_PATH);
+        $this->assertCount(1, $this->screen->getContent());
+        list($ob) = $this->screen->getContent();
+        $this->assertEquals(FileTest::DOCUMENT_PATH, $ob["path"]);
+        $this->screen->resetContent();
+        $this->assertEmpty($this->screen->getContent());
     }
 
     /**
@@ -38,9 +48,18 @@ class MessengerScreenTest extends TestCase
         $this->assertEmpty($this->screen->getContent());
     }
 
+    /**
+     * @covers \He110\CommunicationTools\MessengerScreen::addImage()
+     */
     public function testAddImage()
     {
-
+        $this->assertEmpty($this->screen->getContent());
+        $this->screen->addImage(FileTest::IMAGE_PATH);
+        $this->assertCount(1, $this->screen->getContent());
+        list($ob) = $this->screen->getContent();
+        $this->assertEquals(FileTest::IMAGE_PATH, $ob["path"]);
+        $this->screen->resetContent();
+        $this->assertEmpty($this->screen->getContent());
     }
 
     /**

@@ -58,10 +58,24 @@ class FileTest extends TestCase
         $this->assertArrayHasKey("name", $new);
         $this->assertArrayHasKey("size", $new);
         $this->assertArrayHasKey("type", $new);
+        $this->assertArrayHasKey("description", $new);
+
+        $this->assertEmpty($new["description"]);
 
         $this->assertEquals($conf["path"], $new["path"]);
         $this->assertEquals($conf["name"], $new["name"]);
         $this->assertEquals(File::FILE_TYPE_IMAGE, $new["type"]);
+    }
+
+    /**
+     * @covers \He110\CommunicationTools\ScreenItems\File::getDescription()
+     * @covers \He110\CommunicationTools\ScreenItems\File::setDescription()
+     */
+    public function testGetDescription()
+    {
+        $description = "TEST";
+        $this->file->setDescription($description);
+        $this->assertEquals($description, $this->file->getDescription());
     }
 
     /**
@@ -120,11 +134,6 @@ class FileTest extends TestCase
         $this->assertNull($this->file->getName());
         $this->file->setName(__METHOD__);
         $this->assertEquals(__METHOD__, $this->file->getName());
-    }
-
-    public function testFromArray()
-    {
-
     }
 
     /**
