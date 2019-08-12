@@ -8,6 +8,7 @@
 
 namespace He110\CommunicationToolsTests;
 
+use He110\CommunicationTools\Exceptions\AttachmentNotFoundException;
 use He110\CommunicationTools\MessengerScreen;
 use He110\CommunicationTools\ScreenItems\Button;
 use He110\CommunicationToolsTests\ScreenItems\FileTest;
@@ -18,18 +19,27 @@ class MessengerScreenTest extends TestCase
     /** @var MessengerScreen */
     private $screen;
 
+    const DESCRIPTION = "Test description";
+
     /**
      * @covers \He110\CommunicationTools\MessengerScreen::addDocument()
      */
     public function testAddDocument()
     {
         $this->assertEmpty($this->screen->getContent());
-        $this->screen->addDocument(FileTest::DOCUMENT_PATH);
+        $this->screen->addDocument(FileTest::DOCUMENT_PATH, static::DESCRIPTION);
         $this->assertCount(1, $this->screen->getContent());
         list($ob) = $this->screen->getContent();
         $this->assertEquals(FileTest::DOCUMENT_PATH, $ob["path"]);
+        $this->assertEquals(static::DESCRIPTION, $ob["description"]);
         $this->screen->resetContent();
         $this->assertEmpty($this->screen->getContent());
+
+        try {
+            $this->screen->addDocument("not_existed.file");
+        } catch (\Exception $e) {
+            $this->assertEquals(AttachmentNotFoundException::class, get_class($e));
+        }
     }
 
     /**
@@ -60,10 +70,16 @@ class MessengerScreenTest extends TestCase
         $this->assertEquals(FileTest::IMAGE_PATH, $ob["path"]);
         $this->screen->resetContent();
         $this->assertEmpty($this->screen->getContent());
+
+        try {
+            $this->screen->addImage("not_existed.file");
+        } catch (\Exception $e) {
+            $this->assertEquals(AttachmentNotFoundException::class, get_class($e));
+        }
     }
 
     /**
-     * @covers \He110\CommunicationTools\MessengerScreen::addButtonText()
+     * @covers \He110\CommunicationTools\MessengerScreen::addButtonLink()
      * @covers \He110\CommunicationTools\MessengerScreen::getContent()
      */
     public function testAddButtonLink()
