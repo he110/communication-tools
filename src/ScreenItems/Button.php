@@ -18,7 +18,7 @@ class Button implements ScreenItemInterface
     /** @var string */
     private $label;
 
-    /** @var string|\Closure */
+    /** @var string */
     private $content;
 
     /** @var string */
@@ -43,7 +43,7 @@ class Button implements ScreenItemInterface
     }
 
     /**
-     * @return \Closure|string
+     * @return string
      */
     public function getContent()
     {
@@ -51,7 +51,7 @@ class Button implements ScreenItemInterface
     }
 
     /**
-     * @param \Closure|string $content
+     * @param string $content
      * @return Button
      */
     public function setContent($content): self
@@ -132,5 +132,4 @@ class Button implements ScreenItemInterface
     {
         return $this->getLabel();
     }
-
 }

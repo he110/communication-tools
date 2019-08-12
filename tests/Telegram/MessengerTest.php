@@ -10,6 +10,7 @@ namespace He110\CommunicationToolsTests\Telegram;
 
 use He110\CommunicationTools\Exceptions\AttachmentNotFoundException;
 use He110\CommunicationTools\Exceptions\TargetUserException;
+use He110\CommunicationTools\ScreenItems\Button;
 use He110\CommunicationTools\Telegram\Messenger;
 use PHPUnit\Framework\TestCase;
 
@@ -29,10 +30,14 @@ class MessengerTest extends TestCase
      * @covers \He110\CommunicationTools\Telegram\Messenger::checkRequirements()
      * @covers \He110\CommunicationTools\Telegram\Messenger::setTargetUser()
      * @covers \He110\CommunicationTools\Telegram\Messenger::getTargetUser()
+     * @covers \He110\CommunicationTools\Telegram\Messenger::generateButtonMarkup()
      */
     public function testSendMessage()
     {
         $this->assertTrue($this->client->sendMessage(__METHOD__));
+
+
+        $this->assertTrue($this->client->sendMessage(__METHOD__, $this->generateButtons()));
 
         $this->client->setTargetUser("123456");
         $this->assertEquals("123456", $this->client->getTargetUser());
@@ -51,8 +56,8 @@ class MessengerTest extends TestCase
     /**
      * @covers \He110\CommunicationTools\Telegram\Messenger::sendVoice()
      * @covers \He110\CommunicationTools\Telegram\Messenger::checkRequirements()
-     * @covers \He110\CommunicationTools\ScreenItems\Message::checkRequestResult()
-     * @covers \He110\CommunicationTools\ScreenItems\Message::prepareFile
+     * @covers \He110\CommunicationTools\Telegram\Messenger::checkRequestResult()
+     * @covers \He110\CommunicationTools\Telegram\Messenger::prepareFile()
      */
     public function testSendVoice()
     {
@@ -88,13 +93,15 @@ class MessengerTest extends TestCase
     /**
      * @covers \He110\CommunicationTools\Telegram\Messenger::sendImage()
      * @covers \He110\CommunicationTools\Telegram\Messenger::checkRequirements()
-     * @covers \He110\CommunicationTools\ScreenItems\Message::checkRequestResult()
-     * @covers \He110\CommunicationTools\ScreenItems\Message::prepareFile
+     * @covers \He110\CommunicationTools\Telegram\Messenger::checkRequestResult()
+     * @covers \He110\CommunicationTools\Telegram\Messenger::prepareFile()
+     * @covers \He110\CommunicationTools\Telegram\Messenger::generateButtonMarkup()
      */
     public function testSendImage()
     {
         $this->assertTrue($this->client->sendImage(__DIR__."/../Assets/image.jpg"));
         $this->assertTrue($this->client->sendImage(__DIR__."/../Assets/image.jpg", __METHOD__));
+        $this->assertTrue($this->client->sendImage(__DIR__."/../Assets/image.jpg", __METHOD__, $this->generateButtons()));
 
         try {
             $this->client->sendImage(__DIR__ . "/../Assets/not_existed.jpg");
@@ -113,13 +120,15 @@ class MessengerTest extends TestCase
     /**
      * @covers \He110\CommunicationTools\Telegram\Messenger::sendDocument()
      * @covers \He110\CommunicationTools\Telegram\Messenger::checkRequirements()
-     * @covers \He110\CommunicationTools\ScreenItems\Message::checkRequestResult()
-     * @covers \He110\CommunicationTools\ScreenItems\Message::prepareFile
+     * @covers \He110\CommunicationTools\Telegram\Messenger::checkRequestResult()
+     * @covers \He110\CommunicationTools\Telegram\Messenger::prepareFile()
+     * @covers \He110\CommunicationTools\Telegram\Messenger::generateButtonMarkup()
      */
     public function testSendDocument()
     {
         $this->assertTrue($this->client->sendDocument(__DIR__."/../Assets/image.jpg"));
         $this->assertTrue($this->client->sendDocument(__DIR__."/../Assets/image.jpg", __METHOD__));
+        $this->assertTrue($this->client->sendDocument(__DIR__."/../Assets/image.jpg", __METHOD__, $this->generateButtons()));
 
         try {
             $this->client->sendDocument(__DIR__ . "/../Assets/not_existed.jpg");
@@ -133,6 +142,29 @@ class MessengerTest extends TestCase
         $this->client->setTargetUser(null);
         $this->expectException(TargetUserException::class);
         $this->client->sendDocument(__DIR__."/../Assets/image.jpg");
+    }
+
+    /**
+     * @return array
+     */
+    public function generateButtons(): array
+    {
+        return [
+            Button::create([
+                "type" => Button::BUTTON_TYPE_URL,
+                "label" => "Link",
+                "content" => "https://zobenko.ru"
+            ]),
+            Button::create([
+                "type" => Button::BUTTON_TYPE_TEXT,
+                "label" => "Text"
+            ]),
+            Button::create([
+                "type" => Button::BUTTON_TYPE_CALLBACK,
+                "label" => "Callback",
+                "content" => "callbackFunctionText"
+            ])
+        ];
     }
 
     public function setUp(): void

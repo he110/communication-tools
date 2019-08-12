@@ -15,6 +15,7 @@ use He110\CommunicationTools\Exceptions\TargetUserException;
 use He110\CommunicationTools\MessengerInterface;
 use He110\CommunicationTools\MessengerScreen;
 use He110\CommunicationTools\MessengerWithTokenInterface;
+use He110\CommunicationTools\ScreenItems\Button;
 use TelegramBot\Api\BotApi;
 use TelegramBot\Api\Types\Message;
 
@@ -59,9 +60,15 @@ class Messenger implements MessengerInterface, MessengerWithTokenInterface
         $this->checkRequirements();
 
         try {
-            $result = $this->client->sendMessage($this->getTargetUser(), $text);
-
-            //TODO Сделать работу с кнопками
+            $keyboard = $this->generateButtonMarkup($buttons);
+            $result = $this->client->sendMessage(
+                $this->getTargetUser(),
+                $text,
+                null,
+                false,
+                null,
+                $keyboard
+            );
 
             return method_exists($result, "getMessageId") && $result->getMessageId();
         } catch (\Exception $exception) {
@@ -86,8 +93,15 @@ class Messenger implements MessengerInterface, MessengerWithTokenInterface
         $this->checkRequirements();
         $document = $this->prepareFile($pathToFile);
         try {
-            //TODO Сделать работу с кнопками
-            return $this->checkRequestResult($this->client->sendPhoto($this->getTargetUser(), $document, $description));
+            $keyboard = $this->generateButtonMarkup($buttons);
+            $result = $this->client->sendPhoto(
+                $this->getTargetUser(),
+                $document,
+                $description,
+                null,
+                $keyboard
+            );
+            return $this->checkRequestResult($result);
         } catch (\Exception $exception) {
             return false;
         }
@@ -110,8 +124,15 @@ class Messenger implements MessengerInterface, MessengerWithTokenInterface
         $this->checkRequirements();
         $document = $this->prepareFile($pathToFile);
         try {
-            //TODO Сделать работу с кнопками
-            return $this->checkRequestResult($this->client->sendDocument($this->getTargetUser(), $document, $description));
+            $keyboard = $this->generateButtonMarkup($buttons);
+            $result = $this->client->sendDocument(
+                $this->getTargetUser(),
+                $document,
+                $description,
+                null,
+                $keyboard
+            );
+            return $this->checkRequestResult($result);
         } catch (\Exception $exception) {
             return false;
         }
@@ -131,7 +152,6 @@ class Messenger implements MessengerInterface, MessengerWithTokenInterface
         $this->checkRequirements();
         $document = $this->prepareFile($pathToFile);
         try {
-            //TODO Сделать работу с кнопками
             return $this->checkRequestResult($this->client->sendVoice($this->getTargetUser(), $document));
         } catch (\Exception $exception) {
             return false;
@@ -191,8 +211,49 @@ class Messenger implements MessengerInterface, MessengerWithTokenInterface
         return new \CURLFile($pathToFile);
     }
 
+    /**
+     * @param Message $message
+     * @return bool
+     */
     private function checkRequestResult(Message $message): bool
     {
         return method_exists($message, "getMessageId") && $message->getMessageId();
+    }
+
+    /**
+     * @param Button[] $buttons
+     * @return null|\TelegramBot\Api\Types\Inline\InlineKeyboardMarkup
+     */
+    private function generateButtonMarkup(array $buttons)
+    {
+        if ($buttons && current($buttons) instanceof Button) {
+            $content = [];
+            foreach ($buttons as $button) {
+                if ($button->getType() == Button::BUTTON_TYPE_URL)
+                    $content[] = array(
+                        array(
+                            "text" => $button->getLabel(),
+                            "url" => $button->getContent()
+                        )
+                    );
+                elseif ($button->getType() == Button::BUTTON_TYPE_TEXT)
+                    $content[] = array(
+                        array(
+                            "text" => $button->getLabel(),
+                            "callback_data" => "text=".$button->getLabel()
+                        )
+                    );
+                elseif ($button->getType() == Button::BUTTON_TYPE_CALLBACK) {
+                    $content[] = array(
+                        array(
+                            "text" => $button->getLabel(),
+                            "callback_data" => "clb=".$button->getContent()
+                        )
+                    );
+                }
+            }
+            return new \TelegramBot\Api\Types\Inline\InlineKeyboardMarkup($content);
+        }
+        return null;
     }
 }
