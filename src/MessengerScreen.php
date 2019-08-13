@@ -14,6 +14,7 @@ use He110\CommunicationTools\ScreenItems\Button;
 use He110\CommunicationTools\ScreenItems\File;
 use He110\CommunicationTools\ScreenItems\Message;
 use He110\CommunicationTools\ScreenItems\ScreenItemInterface;
+use He110\CommunicationTools\ScreenItems\Voice;
 
 class MessengerScreen
 {
@@ -81,15 +82,16 @@ class MessengerScreen
      */
     public function addImage(string $pathToFile, string $description = ""): self
     {
-        if ($file = File::create([
+        if (!file_exists($pathToFile))
+            throw new AttachmentNotFoundException("File not found");
+
+        $file = File::create([
             "path" => $pathToFile,
             "description" => $description,
             "type" => File::FILE_TYPE_IMAGE
-        ])) {
-            $this->content[] = $file;
-            return $this;
-        }
-        throw new AttachmentNotFoundException("File not found");
+        ]);
+        $this->content[] = $file;
+        return $this;
     }
 
     /**
@@ -100,19 +102,31 @@ class MessengerScreen
      */
     public function addDocument(string $pathToFile, string $description = ""): self
     {
-        if ($file = File::create([
+        if (!file_exists($pathToFile))
+            throw new AttachmentNotFoundException("File not found");
+
+        $file = File::create([
             "path" => $pathToFile,
             "description" => $description,
             "type" => File::FILE_TYPE_DOCUMENT
-        ])) {
-            $this->content[] = $file;
-            return $this;
-        }
-        throw new AttachmentNotFoundException("File not found");
+        ]);
+        $this->content[] = $file;
+        return $this;
     }
 
+    /**
+     * @param string $pathToFile
+     * @return MessengerScreen
+     * @throws AttachmentNotFoundException
+     */
     public function addVoice(string $pathToFile): self
     {
+        if (!file_exists($pathToFile))
+            throw new AttachmentNotFoundException("File not found");
+        $file = Voice::create([
+            "path" => $pathToFile
+        ]);
+        $this->content[] = $file;
         return $this;
     }
 

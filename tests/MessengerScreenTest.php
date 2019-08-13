@@ -12,6 +12,7 @@ use He110\CommunicationTools\Exceptions\AttachmentNotFoundException;
 use He110\CommunicationTools\MessengerScreen;
 use He110\CommunicationTools\ScreenItems\Button;
 use He110\CommunicationToolsTests\ScreenItems\FileTest;
+use He110\CommunicationToolsTests\ScreenItems\VoiceTest;
 use PHPUnit\Framework\TestCase;
 
 class MessengerScreenTest extends TestCase
@@ -94,9 +95,25 @@ class MessengerScreenTest extends TestCase
         $this->assertEquals($url, $item["url"]);
     }
 
+    /**
+     * @covers \He110\CommunicationTools\MessengerScreen::addVoice()
+     * @covers \He110\CommunicationTools\MessengerScreen::getContent()
+     */
     public function testAddVoice()
     {
+        $this->assertEmpty($this->screen->getContent());
+        $this->screen->addVoice(VoiceTest::VOICE_OGG);
+        $this->assertCount(1, $this->screen->getContent());
+        list($ob) = $this->screen->getContent();
+        $this->assertEquals(VoiceTest::VOICE_OGG, $ob["path"]);
+        $this->screen->resetContent();
+        $this->assertEmpty($this->screen->getContent());
 
+        try {
+            $this->screen->addVoice("not_existed.file");
+        } catch (\Exception $e) {
+            $this->assertEquals(AttachmentNotFoundException::class, get_class($e));
+        }
     }
 
     /**
