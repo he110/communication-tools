@@ -50,7 +50,6 @@ class Voice implements ScreenItemInterface
     /**
      * @param string $path
      * @return Voice
-     * @throws AttachmentNotFoundException
      */
     public function setPath(string $path): self
     {

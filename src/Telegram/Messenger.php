@@ -170,9 +170,7 @@ class Messenger implements MessengerInterface, MessengerWithTokenInterface
         $current = null;
         $result = true;
 
-        //TODO Поднять кнопки наверх, если последнее сообщение голосовое
-
-        foreach ($screen->getContent(false) as $index => $item) {
+        foreach ($screen->fixItemsOrder() as $index => $item) {
             if ($item instanceof Button)
                 $buttons[] = $item;
             else {
@@ -270,31 +268,40 @@ class Messenger implements MessengerInterface, MessengerWithTokenInterface
         if ($buttons && current($buttons) instanceof Button) {
             $content = [];
             foreach ($buttons as $button) {
-                if ($button->getType() == Button::BUTTON_TYPE_URL)
-                    $content[] = array(
-                        array(
-                            "text" => $button->getLabel(),
-                            "url" => $button->getContent()
-                        )
-                    );
-                elseif ($button->getType() == Button::BUTTON_TYPE_TEXT)
-                    $content[] = array(
-                        array(
-                            "text" => $button->getLabel(),
-                            "callback_data" => "text=".$button->getLabel()
-                        )
-                    );
-                elseif ($button->getType() == Button::BUTTON_TYPE_CALLBACK) {
-                    $content[] = array(
-                        array(
-                            "text" => $button->getLabel(),
-                            "callback_data" => "clb=".$button->getContent()
-                        )
-                    );
-                }
+                $content[] = $this->buttonToArray($button);
             }
             return new \TelegramBot\Api\Types\Inline\InlineKeyboardMarkup($content);
         }
         return null;
+    }
+
+    /**
+     * @param Button $button
+     * @return array
+     */
+    private function buttonToArray(Button $button): array
+    {
+        if ($button->getType() == Button::BUTTON_TYPE_URL)
+            return array(
+                array(
+                    "text" => $button->getLabel(),
+                    "url" => $button->getContent()
+                )
+            );
+        elseif ($button->getType() == Button::BUTTON_TYPE_TEXT)
+            return array(
+                array(
+                    "text" => $button->getLabel(),
+                    "callback_data" => "text=".$button->getLabel()
+                )
+            );
+        elseif ($button->getType() == Button::BUTTON_TYPE_CALLBACK) {
+            return array(
+                array(
+                    "text" => $button->getLabel(),
+                    "callback_data" => "clb=".$button->getContent()
+                )
+            );
+        }
     }
 }

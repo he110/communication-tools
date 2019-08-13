@@ -71,6 +71,7 @@ class VoiceTest extends TestCase
     public function testGetText()
     {
         $this->assertEmpty($this->voice->getText());
+        $this->voice->setPath("non_existed.file");
         try {
             $this->voice->getText();
         } catch (\Exception $e) {

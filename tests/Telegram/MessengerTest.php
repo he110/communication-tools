@@ -33,6 +33,8 @@ class MessengerTest extends TestCase
      * @covers \He110\CommunicationTools\Telegram\Messenger::setTargetUser()
      * @covers \He110\CommunicationTools\Telegram\Messenger::getTargetUser()
      * @covers \He110\CommunicationTools\Telegram\Messenger::generateButtonMarkup()
+     * @covers \He110\CommunicationTools\Telegram\Messenger::buttonToArray()
+     * @covers \He110\CommunicationTools\Telegram\Messenger::checkRequestResult()
      */
     public function testSendMessage()
     {
@@ -52,6 +54,7 @@ class MessengerTest extends TestCase
 
     /**
      * @covers \He110\CommunicationTools\Telegram\Messenger::sendScreen()
+     * @covers \He110\CommunicationTools\Telegram\Messenger::workWithScreenItem()
      */
     public function testSendScreen()
     {

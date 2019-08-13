@@ -156,4 +156,38 @@ class MessengerScreen
         if (!file_exists($pathToFile))
             throw new AttachmentNotFoundException("File not found");
     }
+
+    /**
+     * @return array
+     */
+    public function fixItemsOrder(): array
+    {
+        $content = $this->getContent(false);
+        $buttons = [];
+        $lastItem = null;
+        $acceptableItem = null;
+        foreach ($content as $index => $item) {
+            if ($item instanceof Button)
+                $buttons[] = $item;
+            else {
+                $lastItem = $index;
+                if (!($item instanceof Voice)) {
+                    $acceptableItem = $lastItem;
+                } else {
+                    $buttons = [];
+                }
+            }
+        }
+
+        if ($buttons && $content[$lastItem] instanceof Voice) {
+            if ($acceptableItem === null) {
+                Helpers::array_insert($content, $lastItem, [Message::create(["text"=>"Use buttons"])]);
+                $acceptableItem = $lastItem;
+            }
+            $content = array_slice($content, 0, count($content) - count($buttons));
+            Helpers::array_insert($content, $acceptableItem+1, $buttons);
+        }
+
+        return $content;
+    }
 }

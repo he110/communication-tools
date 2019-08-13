@@ -12,6 +12,7 @@ use He110\CommunicationTools\Exceptions\AttachmentNotFoundException;
 use He110\CommunicationTools\MessengerScreen;
 use He110\CommunicationTools\ScreenItems\Button;
 use He110\CommunicationTools\ScreenItems\Message;
+use He110\CommunicationTools\ScreenItems\Voice;
 use He110\CommunicationToolsTests\ScreenItems\FileTest;
 use He110\CommunicationToolsTests\ScreenItems\VoiceTest;
 use PHPUnit\Framework\TestCase;
@@ -25,6 +26,7 @@ class MessengerScreenTest extends TestCase
 
     /**
      * @covers \He110\CommunicationTools\MessengerScreen::addDocument()
+     * @covers \He110\CommunicationTools\MessengerScreen::checkFile()
      */
     public function testAddDocument()
     {
@@ -62,6 +64,7 @@ class MessengerScreenTest extends TestCase
 
     /**
      * @covers \He110\CommunicationTools\MessengerScreen::addImage()
+     * @covers \He110\CommunicationTools\MessengerScreen::checkFile()
      */
     public function testAddImage()
     {
@@ -99,6 +102,7 @@ class MessengerScreenTest extends TestCase
     /**
      * @covers \He110\CommunicationTools\MessengerScreen::addVoice()
      * @covers \He110\CommunicationTools\MessengerScreen::getContent()
+     * @covers \He110\CommunicationTools\MessengerScreen::checkFile()
      */
     public function testAddVoice()
     {
@@ -144,6 +148,45 @@ class MessengerScreenTest extends TestCase
         $this->assertEquals(__METHOD__, $item["label"]);
         $this->assertEquals(Button::BUTTON_TYPE_CALLBACK, $item["type"]);
         $this->assertIsCallable($item["content"]);
+    }
+
+    /**
+     * @covers \He110\CommunicationTools\MessengerScreen::fixItemsOrder()
+     */
+    public function testFixContentOrder()
+    {
+        $this->screen->addMessage(__METHOD__);
+        $this->screen->addButtonText("Text button");
+
+        $this->assertEquals($this->screen->getContent(false), $this->screen->fixItemsOrder());
+
+        $this->screen->addVoice(VoiceTest::VOICE_OGG);
+
+        $this->assertEquals($this->screen->getContent(false), $this->screen->fixItemsOrder());
+
+        $this->screen->addButtonText("After voice");
+
+        $fixed = $this->screen->fixItemsOrder();
+
+        $this->assertNotEquals($this->screen->getContent(false), $fixed);
+
+        $this->assertCount(4, $fixed);
+        $this->assertInstanceOf(Message::class, $fixed[0]);
+        $this->assertInstanceOf(Button::class, $fixed[1]);
+        $this->assertInstanceOf(Button::class, $fixed[2]);
+        $this->assertInstanceOf(Voice::class, $fixed[3]);
+
+        $this->screen->resetContent();
+
+        $this->screen->addVoice(VoiceTest::VOICE_OGG);
+        $this->screen->addButtonText("Single button after voice");
+
+        $fixed = $this->screen->fixItemsOrder();
+
+        $this->assertCount(3, $fixed);
+        $this->assertInstanceOf(Message::class, $fixed[0]);
+        $this->assertInstanceOf(Button::class, $fixed[1]);
+        $this->assertInstanceOf(Voice::class, $fixed[2]);
     }
 
     /**
