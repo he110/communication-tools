@@ -174,7 +174,7 @@ class Messenger implements MessengerInterface, MessengerWithTokenInterface
             else {
                 if ($current === null) {
                     $current = $item;
-                } else {
+                } elseif ($current !== $item && $current !== null) {
                     if ($current instanceof \He110\CommunicationTools\ScreenItems\Message)
                         $result = $result && $this->sendMessage($current->getText(), $buttons);
                     elseif ($current instanceof File) {
