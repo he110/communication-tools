@@ -131,13 +131,15 @@ class MessengerScreen
     }
 
     /**
+     * @param bool $asArray
      * @return array
      */
-    public function getContent(): array
+    public function getContent(bool $asArray = true): array
     {
         $array = [];
-        foreach($this->content as $item)
-            $array[] = $item->toArray();
+        foreach($this->content as $item) {
+            $array[] = $asArray ? $item->toArray() : $item;
+        }
         return $array;
     }
 

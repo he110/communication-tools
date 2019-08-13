@@ -168,7 +168,7 @@ class Messenger implements MessengerInterface, MessengerWithTokenInterface
         $buttons = array();
         $current = null;
         $result = true;
-        foreach ($screen->getContent() as $index => $item) {
+        foreach ($screen->getContent(false) as $index => $item) {
             if ($item instanceof Button)
                 $buttons[] = $item;
             else {

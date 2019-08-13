@@ -11,6 +11,7 @@ namespace He110\CommunicationToolsTests;
 use He110\CommunicationTools\Exceptions\AttachmentNotFoundException;
 use He110\CommunicationTools\MessengerScreen;
 use He110\CommunicationTools\ScreenItems\Button;
+use He110\CommunicationTools\ScreenItems\Message;
 use He110\CommunicationToolsTests\ScreenItems\FileTest;
 use He110\CommunicationToolsTests\ScreenItems\VoiceTest;
 use PHPUnit\Framework\TestCase;
@@ -143,6 +144,20 @@ class MessengerScreenTest extends TestCase
         $this->assertEquals(__METHOD__, $item["label"]);
         $this->assertEquals(Button::BUTTON_TYPE_CALLBACK, $item["type"]);
         $this->assertIsCallable($item["content"]);
+    }
+
+    /**
+     * @covers \He110\CommunicationTools\MessengerScreen::getContent()
+     */
+    public function testGetContent()
+    {
+        $this->screen->addMessage(__METHOD__);
+        $this->assertCount(1, $this->screen->getContent());
+        list($message) = $this->screen->getContent();
+        $this->assertIsArray($message);
+
+        list($message) = $this->screen->getContent(false);
+        $this->assertInstanceOf(Message::class, $message);
     }
 
     public function setUp(): void
