@@ -14,6 +14,7 @@ use He110\CommunicationTools\MessengerScreen;
 use He110\CommunicationTools\ScreenItems\Button;
 use He110\CommunicationTools\Telegram\Messenger;
 use He110\CommunicationToolsTests\ScreenItems\FileTest;
+use He110\CommunicationToolsTests\ScreenItems\VoiceTest;
 use PHPUnit\Framework\TestCase;
 
 class MessengerTest extends TestCase
@@ -63,6 +64,7 @@ class MessengerTest extends TestCase
         $screen->addButtonLink("Author", "https://zobenko.ru");
         $screen->addButtonText("Hello, world");
         $screen->addImage(FileTest::IMAGE_PATH, "Description");
+        $screen->addVoice(VoiceTest::VOICE_WAV);
 
         $this->assertTrue($this->client->sendScreen($screen));
     }
