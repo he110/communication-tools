@@ -16,6 +16,8 @@ use He110\CommunicationTools\MessengerInterface;
 use He110\CommunicationTools\MessengerScreen;
 use He110\CommunicationTools\MessengerWithTokenInterface;
 use He110\CommunicationTools\ScreenItems\Button;
+use He110\CommunicationTools\ScreenItems\File;
+use He110\CommunicationTools\ScreenItems\Voice;
 use TelegramBot\Api\BotApi;
 use TelegramBot\Api\Types\Message;
 
@@ -163,7 +165,35 @@ class Messenger implements MessengerInterface, MessengerWithTokenInterface
      */
     public function sendScreen(MessengerScreen $screen): bool
     {
-        // TODO: Implement sendScreen() method.
+        $buttons = array();
+        $current = null;
+        $result = true;
+        foreach ($screen->getContent() as $index => $item) {
+            if ($item instanceof Button)
+                $buttons[] = $item;
+            else {
+                if ($current === null) {
+                    $current = $item;
+                } else {
+                    if ($current instanceof \He110\CommunicationTools\ScreenItems\Message)
+                        $result = $result && $this->sendMessage($current->getText(), $buttons);
+                    elseif ($current instanceof File) {
+                        if ($current->getType() === File::FILE_TYPE_IMAGE)
+                            $result = $result && $this->sendImage($current->getPath(), $current->getDescription());
+                        else {
+                            $result = $result && $this->sendDocument($current->getPath(), $current->getDescription());
+                        }
+                    }
+                    elseif ($current instanceof Voice)
+                        $result = $result && $this->sendVoice($current->getPath());
+
+                    if (!($current instanceof Voice))
+                        $buttons = [];
+                    $current = $item;
+                }
+            }
+        }
+        return $result;
     }
 
     /**

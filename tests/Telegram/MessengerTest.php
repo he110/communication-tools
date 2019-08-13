@@ -10,8 +10,10 @@ namespace He110\CommunicationToolsTests\Telegram;
 
 use He110\CommunicationTools\Exceptions\AttachmentNotFoundException;
 use He110\CommunicationTools\Exceptions\TargetUserException;
+use He110\CommunicationTools\MessengerScreen;
 use He110\CommunicationTools\ScreenItems\Button;
 use He110\CommunicationTools\Telegram\Messenger;
+use He110\CommunicationToolsTests\ScreenItems\FileTest;
 use PHPUnit\Framework\TestCase;
 
 class MessengerTest extends TestCase
@@ -48,9 +50,18 @@ class MessengerTest extends TestCase
         $this->client->sendMessage(__METHOD__);
     }
 
+    /**
+     * @covers \He110\CommunicationTools\Telegram\Messenger::sendScreen()
+     */
     public function testSendScreen()
     {
+        $screen = new MessengerScreen();
+        $screen->addMessage(__METHOD__);
+        $screen->addButtonLink("Author", "https://zobenko.ru");
+        $screen->addButtonText("Hello, world");
+        $screen->addImage(FileTest::IMAGE_PATH, "Description");
 
+        $this->assertTrue($this->client->sendScreen($screen));
     }
 
     /**
