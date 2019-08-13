@@ -82,9 +82,7 @@ class MessengerScreen
      */
     public function addImage(string $pathToFile, string $description = ""): self
     {
-        if (!file_exists($pathToFile))
-            throw new AttachmentNotFoundException("File not found");
-
+        $this->checkFile($pathToFile);
         $file = File::create([
             "path" => $pathToFile,
             "description" => $description,
@@ -102,9 +100,7 @@ class MessengerScreen
      */
     public function addDocument(string $pathToFile, string $description = ""): self
     {
-        if (!file_exists($pathToFile))
-            throw new AttachmentNotFoundException("File not found");
-
+        $this->checkFile($pathToFile);
         $file = File::create([
             "path" => $pathToFile,
             "description" => $description,
@@ -121,8 +117,7 @@ class MessengerScreen
      */
     public function addVoice(string $pathToFile): self
     {
-        if (!file_exists($pathToFile))
-            throw new AttachmentNotFoundException("File not found");
+        $this->checkFile($pathToFile);
         $file = Voice::create([
             "path" => $pathToFile
         ]);
@@ -150,5 +145,15 @@ class MessengerScreen
     {
         $this->content = [];
         return $this;
+    }
+
+    /**
+     * @param string $pathToFile
+     * @throws AttachmentNotFoundException
+     */
+    private function checkFile(string $pathToFile): void
+    {
+        if (!file_exists($pathToFile))
+            throw new AttachmentNotFoundException("File not found");
     }
 }

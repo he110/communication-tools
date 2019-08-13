@@ -17,6 +17,7 @@ use He110\CommunicationTools\MessengerScreen;
 use He110\CommunicationTools\MessengerWithTokenInterface;
 use He110\CommunicationTools\ScreenItems\Button;
 use He110\CommunicationTools\ScreenItems\File;
+use He110\CommunicationTools\ScreenItems\ScreenItemInterface;
 use He110\CommunicationTools\ScreenItems\Voice;
 use TelegramBot\Api\BotApi;
 use TelegramBot\Api\Types\Message;
@@ -168,6 +169,9 @@ class Messenger implements MessengerInterface, MessengerWithTokenInterface
         $buttons = array();
         $current = null;
         $result = true;
+
+        //TODO Поднять кнопки наверх, если последнее сообщение голосовое
+
         foreach ($screen->getContent(false) as $index => $item) {
             if ($item instanceof Button)
                 $buttons[] = $item;
@@ -175,24 +179,31 @@ class Messenger implements MessengerInterface, MessengerWithTokenInterface
                 if ($current === null) {
                     $current = $item;
                 } elseif ($current !== $item && $current !== null) {
-                    if ($current instanceof \He110\CommunicationTools\ScreenItems\Message)
-                        $result = $result && $this->sendMessage($current->getText(), $buttons);
-                    elseif ($current instanceof File) {
-                        if ($current->getType() === File::FILE_TYPE_IMAGE)
-                            $result = $result && $this->sendImage($current->getPath(), $current->getDescription());
-                        else {
-                            $result = $result && $this->sendDocument($current->getPath(), $current->getDescription());
-                        }
-                    }
-                    elseif ($current instanceof Voice)
-                        $result = $result && $this->sendVoice($current->getPath());
-
+                    $result = $result && $this->workWithScreenItem($current, $buttons);
                     if (!($current instanceof Voice))
                         $buttons = [];
                     $current = $item;
                 }
             }
         }
+        $this->workWithScreenItem($current, $buttons);
+        return $result;
+    }
+
+    private function workWithScreenItem(ScreenItemInterface $item, array $buttons = []): bool
+    {
+        $result = true;
+        if ($item instanceof \He110\CommunicationTools\ScreenItems\Message)
+            $result = $result && $this->sendMessage($item->getText(), $buttons);
+        elseif ($item instanceof File) {
+            if ($item->getType() === File::FILE_TYPE_IMAGE)
+                $result = $result && $this->sendImage($item->getPath(), $item->getDescription());
+            else {
+                $result = $result && $this->sendDocument($item->getPath(), $item->getDescription());
+            }
+        }
+        elseif ($item instanceof Voice)
+            $result = $result && $this->sendVoice($item->getPath());
         return $result;
     }
 
