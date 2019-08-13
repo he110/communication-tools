@@ -14,10 +14,10 @@ interface MessengerWithTokenInterface
     /**
      * @param string $token
      */
-    public function setAccessToken(string $token);
+    public function setAccessToken(?string $token);
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getAccessToken(): string;
+    public function getAccessToken(): ?string;
 }

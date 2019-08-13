@@ -217,7 +217,7 @@ class Messenger implements MessengerInterface, MessengerWithTokenInterface
     /**
      * {@inheritdoc}
      */
-    public function getAccessToken(): string
+    public function getAccessToken(): ?string
     {
         return $this->accessToken;
     }

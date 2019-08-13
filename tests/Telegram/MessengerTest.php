@@ -55,10 +55,11 @@ class MessengerTest extends TestCase
 
         $this->client->setAccessToken(null);
         try {
-            $this->assertTrue($this->client->sendMessage(__METHOD__));
+            $this->client->sendMessage(__METHOD__);
         } catch (\Exception $e) {
             $this->assertEquals(AccessTokenException::class, get_class($e));
         }
+
     }
 
     /**
