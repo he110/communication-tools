@@ -228,7 +228,7 @@ class Messenger implements MessengerInterface, MessengerWithTokenInterface
      */
     private function checkRequirements()
     {
-        if (is_null($this->client) || is_null($this->getAccessToken())) {
+        if (is_null($this->client) || !$this->getAccessToken()) {
             throw new AccessTokenException("Telegram access token required");
         }
 
