@@ -27,7 +27,7 @@ class Messenger implements MessengerInterface, MessengerWithTokenInterface
     /** @var BotApi */
     private $client = null;
 
-    /** @var string */
+    /** @var string|null */
     private $accessToken;
 
     /** @var string */
@@ -208,7 +208,7 @@ class Messenger implements MessengerInterface, MessengerWithTokenInterface
     /**
      * {@inheritdoc}
      */
-    public function setAccessToken(string $token)
+    public function setAccessToken(?string $token)
     {
         $this->accessToken = $token;
         $this->client = new BotApi($token);

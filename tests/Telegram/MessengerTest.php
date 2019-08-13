@@ -8,6 +8,7 @@
 
 namespace He110\CommunicationToolsTests\Telegram;
 
+use He110\CommunicationTools\Exceptions\AccessTokenException;
 use He110\CommunicationTools\Exceptions\AttachmentNotFoundException;
 use He110\CommunicationTools\Exceptions\TargetUserException;
 use He110\CommunicationTools\MessengerScreen;
@@ -51,6 +52,13 @@ class MessengerTest extends TestCase
         $this->client->setTargetUser(null);
         $this->expectException(TargetUserException::class);
         $this->client->sendMessage(__METHOD__);
+
+        $this->client->setAccessToken(null);
+        try {
+            $this->assertTrue($this->client->sendMessage(__METHOD__));
+        } catch (\Exception $e) {
+            $this->assertEquals(AccessTokenException::class, get_class($e));
+        }
     }
 
     /**
