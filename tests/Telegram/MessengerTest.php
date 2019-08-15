@@ -52,14 +52,17 @@ class MessengerTest extends TestCase
         $this->client->setTargetUser(null);
         $this->expectException(TargetUserException::class);
         $this->client->sendMessage(__METHOD__);
+    }
 
+    /**
+     * @covers \He110\CommunicationTools\Telegram\Messenger::checkRequirements()
+     * @covers \He110\CommunicationTools\Telegram\Messenger::setAccessToken()
+     */
+    public function testCheckRequirements()
+    {
+        $this->expectException(AccessTokenException::class);
         $this->client->setAccessToken(null);
-        try {
-            $this->client->sendMessage(__METHOD__);
-        } catch (\Exception $e) {
-            $this->assertEquals(AccessTokenException::class, get_class($e));
-        }
-
+        $this->client->sendMessage(__METHOD__);
     }
 
     /**
@@ -121,6 +124,7 @@ class MessengerTest extends TestCase
      * @covers \He110\CommunicationTools\Telegram\Messenger::checkRequestResult()
      * @covers \He110\CommunicationTools\Telegram\Messenger::prepareFile()
      * @covers \He110\CommunicationTools\Telegram\Messenger::generateButtonMarkup()
+     * @covers \He110\CommunicationTools\Telegram\Messenger::buttonToArray()
      */
     public function testSendImage()
     {
@@ -148,6 +152,7 @@ class MessengerTest extends TestCase
      * @covers \He110\CommunicationTools\Telegram\Messenger::checkRequestResult()
      * @covers \He110\CommunicationTools\Telegram\Messenger::prepareFile()
      * @covers \He110\CommunicationTools\Telegram\Messenger::generateButtonMarkup()
+     * @covers \He110\CommunicationTools\Telegram\Messenger::buttonToArray()
      */
     public function testSendDocument()
     {

@@ -288,18 +288,19 @@ class Messenger implements MessengerInterface, MessengerWithTokenInterface
                     "url" => $button->getContent()
                 )
             );
-        elseif ($button->getType() == Button::BUTTON_TYPE_TEXT)
-            return array(
-                array(
-                    "text" => $button->getLabel(),
-                    "callback_data" => "text=".$button->getLabel()
-                )
-            );
         elseif ($button->getType() == Button::BUTTON_TYPE_CALLBACK) {
             return array(
                 array(
                     "text" => $button->getLabel(),
                     "callback_data" => "clb=".$button->getContent()
+                )
+            );
+        }
+        else {
+            return array(
+                array(
+                    "text" => $button->getLabel(),
+                    "callback_data" => "text=" . $button->getLabel()
                 )
             );
         }
