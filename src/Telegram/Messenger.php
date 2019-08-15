@@ -9,6 +9,7 @@
 namespace He110\CommunicationTools\Telegram;
 
 
+use He110\CommunicationTools\EventController;
 use He110\CommunicationTools\Exceptions\AccessTokenException;
 use He110\CommunicationTools\Exceptions\AttachmentNotFoundException;
 use He110\CommunicationTools\Exceptions\TargetUserException;
@@ -20,10 +21,11 @@ use He110\CommunicationTools\ScreenItems\Button;
 use He110\CommunicationTools\ScreenItems\File;
 use He110\CommunicationTools\ScreenItems\ScreenItemInterface;
 use He110\CommunicationTools\ScreenItems\Voice;
+use He110\CommunicationTools\Request;
 use TelegramBot\Api\BotApi;
 use TelegramBot\Api\Types\Message;
 
-class Messenger implements MessengerInterface, MessengerWithTokenInterface
+class Messenger implements MessengerInterface, MessengerWithTokenInterface, MessengerEventsInterface
 {
     /** @var BotApi */
     private $client = null;
@@ -307,5 +309,53 @@ class Messenger implements MessengerInterface, MessengerWithTokenInterface
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function onMessage(\Closure $closure)
+    {
+        $key = spl_object_hash($this)."_".Request::REQUEST_TYPE_MESSAGE;
+        EventController::getInstance()->addEvent($key, $closure);
+    }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function onMessageRead(\Closure $closure)
+    {
+        $key = spl_object_hash($this)."_".Request::REQUEST_TYPE_MESSAGE_READ;
+        EventController::getInstance()->addEvent($key, $closure);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function onButtonClick(\Closure $closure)
+    {
+        $key = spl_object_hash($this)."_".Request::REQUEST_TYPE_BUTTON_CLICK;
+        EventController::getInstance()->addEvent($key, $closure);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function checkEvents(): void
+    {
+        $request = $this->getRequest();
+        if (is_null($request->getType()))
+            return;
+        $key = spl_object_hash($this)."_".$request->getType();
+        if ($closure = EventController::getInstance()->getEvent($key))
+            $closure($request);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRequest(): Request
+    {
+        //TODO: Сделать разбор запроса и сборку объекта Request
+        $request = file_get_contents("php://input");
+        return (new Request())->setType(Request::REQUEST_TYPE_MESSAGE)->setMessage($request);
+    }
 }

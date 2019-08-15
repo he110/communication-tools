@@ -15,21 +15,9 @@ interface MessengerEventsInterface
 
     public function onMessageRead(\Closure $closure);
 
-    public function onMessageEdit(\Closure $closure);
-
-    public function onMessageDelete(\Closure $closure);
-
     public function onButtonClick(\Closure $closure);
 
-    public function eventMessage();
-
-    public function eventMessageRead();
-
-    public function eventMessageEdited();
-
-    public function eventMessageDeleted();
-
-    public function eventButtonClicked();
-
     public function checkEvents();
+
+    function getRequest(): Request;
 }

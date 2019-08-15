@@ -175,6 +175,25 @@ class MessengerTest extends TestCase
     }
 
     /**
+     * @covers \He110\CommunicationTools\Telegram\Messenger::onMessage()
+     * @covers \He110\CommunicationTools\Telegram\Messenger::getRequest()
+     * @covers \He110\CommunicationTools\Telegram\Messenger::checkEvents()
+     */
+    public function testOnMessage()
+    {
+        $var = "before";
+        $this->client->onMessage(function() use (&$var) {
+            $var = "after";
+        });
+
+        //TODO: Найти способ симуляции php://input
+
+        $this->assertEquals("before", $var);
+        $this->client->checkEvents();
+        $this->assertEquals("after", $var);
+    }
+
+    /**
      * @return array
      */
     public function generateButtons(): array
