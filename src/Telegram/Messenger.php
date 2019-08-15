@@ -12,6 +12,7 @@ namespace He110\CommunicationTools\Telegram;
 use He110\CommunicationTools\Exceptions\AccessTokenException;
 use He110\CommunicationTools\Exceptions\AttachmentNotFoundException;
 use He110\CommunicationTools\Exceptions\TargetUserException;
+use He110\CommunicationTools\MessengerEventsInterface;
 use He110\CommunicationTools\MessengerInterface;
 use He110\CommunicationTools\MessengerScreen;
 use He110\CommunicationTools\MessengerWithTokenInterface;
@@ -305,4 +306,6 @@ class Messenger implements MessengerInterface, MessengerWithTokenInterface
             );
         }
     }
+
+
 }

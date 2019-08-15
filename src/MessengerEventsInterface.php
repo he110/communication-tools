@@ -21,13 +21,15 @@ interface MessengerEventsInterface
 
     public function onButtonClick(\Closure $closure);
 
-    static public function eventMessage();
+    public function eventMessage();
 
-    static public function eventMessageRead();
+    public function eventMessageRead();
 
-    static public function eventMessageEdited();
+    public function eventMessageEdited();
 
-    static public function eventMessageDeleted();
+    public function eventMessageDeleted();
 
-    static public function eventButtonClicked();
+    public function eventButtonClicked();
+
+    public function checkEvents();
 }
