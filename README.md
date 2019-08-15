@@ -1,6 +1,5 @@
 # Communication Tools [![Build Status](https://travis-ci.com/he110/communication-tools.svg?branch=master)](https://travis-ci.com/he110/communication-tools)
 
-[![Total Downloads](https://img.shields.io/packagist/dt/he110/communication-tools.svg)](https://packagist.org/packages/he110/communication-tools)
 [![Latest Stable Version](https://img.shields.io/packagist/v/he110/communication-tools.svg)](https://packagist.org/packages/he110/communication-tools) [![codecov](https://codecov.io/gh/he110/communication-tools/branch/master/graph/badge.svg)](https://codecov.io/gh/he110/communication-tools) [![Maintainability](https://api.codeclimate.com/v1/badges/8fba6456c0c825fc252a/maintainability)](https://codeclimate.com/github/he110/communication-tools/maintainability)
 
 Tools set for messenger managing. Allows you to send any content via Telegram, Viber, WhatsApp, VK, Facebook Messenger and so on.
@@ -10,6 +9,7 @@ Tools set for messenger managing. Allows you to send any content via Telegram, V
 Install the latest version with
 
 ```bash
+// Not published on Packagist yet
 $ composer require he110/communication-tools
 ```
 
