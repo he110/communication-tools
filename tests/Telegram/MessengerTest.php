@@ -204,9 +204,7 @@ class MessengerTest extends TestCase
         $client->onMessage(function($request) use (&$var, $text) {
             /** @var Request $request */
             $var = "after";
-            $this->assertEquals($this->from["firstName"], $request->getUser()->getFirstName());
-            $this->assertEquals($this->from["lastName"], $request->getUser()->getLastName());
-            $this->assertEquals($this->from["username"], $request->getUser()->getUsername());
+            $this->checkRequestUser($request);
             $this->assertEquals($text, $request->getMessage());
             $this->assertEquals(Request::REQUEST_TYPE_MESSAGE, $request->getType());
         });
@@ -236,9 +234,7 @@ class MessengerTest extends TestCase
         $client->onButtonClick(function($request) use (&$var) {
             /** @var Request $request */
             $var = "after";
-            $this->assertEquals($this->from["firstName"], $request->getUser()->getFirstName());
-            $this->assertEquals($this->from["lastName"], $request->getUser()->getLastName());
-            $this->assertEquals($this->from["username"], $request->getUser()->getUsername());
+            $this->checkRequestUser($request);
             $this->assertEmpty($request->getMessage());
             $this->assertEquals("callbackFunctionText", $request->getPayload());
             $this->assertEquals(Request::REQUEST_TYPE_BUTTON_CLICK, $request->getType());
@@ -252,9 +248,7 @@ class MessengerTest extends TestCase
         $client->setDataForInput($this->getTelegramRequestMockForCallback("text=$buttonText"));
         $client->onButtonClick(function($request) use ($buttonText) {
             /** @var Request $request */
-            $this->assertEquals($this->from["firstName"], $request->getUser()->getFirstName());
-            $this->assertEquals($this->from["lastName"], $request->getUser()->getLastName());
-            $this->assertEquals($this->from["username"], $request->getUser()->getUsername());
+            $this->checkRequestUser($request);
             $this->assertNotEmpty($request->getMessage());
             $this->assertNull($request->getPayload());
             $this->assertEquals(Request::REQUEST_TYPE_BUTTON_CLICK, $request->getType());
@@ -262,6 +256,16 @@ class MessengerTest extends TestCase
         });
 
         $client->checkEvents();
+    }
+
+    /**
+     * @param Request $request
+     */
+    private function checkRequestUser(Request &$request): void
+    {
+        $this->assertEquals($this->from["firstName"], $request->getUser()->getFirstName());
+        $this->assertEquals($this->from["lastName"], $request->getUser()->getLastName());
+        $this->assertEquals($this->from["username"], $request->getUser()->getUsername());
     }
 
     /**
