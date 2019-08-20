@@ -65,6 +65,17 @@ class RequestTest extends TestCase
         $this->assertEquals(__METHOD__, $this->request->getMessage());
     }
 
+    /**
+     * @covers \He110\CommunicationTools\Request::setPayload()
+     * @covers \He110\CommunicationTools\Request::getPayload()
+     */
+    public function testSetPayload()
+    {
+        $this->assertEmpty($this->request->getPayload());
+        $this->request->setPayload(__METHOD__);
+        $this->assertEquals(__METHOD__, $this->request->getPayload());
+    }
+
     public function setUp(): void
     {
         $this->request = new Request();

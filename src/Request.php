@@ -23,6 +23,9 @@ class Request
     /** @var string|null*/
     private $path;
 
+    /** @var string|null */
+    private $payload;
+
     const REQUEST_TYPE_MESSAGE = "message_new";
     const REQUEST_TYPE_MESSAGE_READ = "message_read";
     const REQUEST_TYPE_BUTTON_CLICK = "button_click";
@@ -101,5 +104,21 @@ class Request
         return $this;
     }
 
+    /**
+     * @return null|string
+     */
+    public function getPayload(): ?string
+    {
+        return $this->payload;
+    }
 
+    /**
+     * @param null|string $payload
+     * @return Request
+     */
+    public function setPayload(?string $payload): self
+    {
+        $this->payload = $payload;
+        return $this;
+    }
 }
