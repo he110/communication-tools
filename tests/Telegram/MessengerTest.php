@@ -12,6 +12,8 @@ use He110\CommunicationTools\Exceptions\AccessTokenException;
 use He110\CommunicationTools\Exceptions\AttachmentNotFoundException;
 use He110\CommunicationTools\Exceptions\TargetUserException;
 use He110\CommunicationTools\MessengerScreen;
+use He110\CommunicationTools\MessengerUser;
+use He110\CommunicationTools\Request;
 use He110\CommunicationTools\ScreenItems\Button;
 use He110\CommunicationTools\Telegram\Messenger;
 use He110\CommunicationToolsTests\ScreenItems\FileTest;
@@ -28,6 +30,13 @@ class MessengerTest extends TestCase
 
     /** @var Messenger */
     private $client;
+
+    /** @var array */
+    private $from = [
+        "firstName" => "Ivan",
+        "lastName" => "Ivanov",
+        "username" => "IvanTest"
+    ];
 
     /**
      * @covers \He110\CommunicationTools\Telegram\Messenger::sendMessage()
@@ -182,15 +191,61 @@ class MessengerTest extends TestCase
     public function testOnMessage()
     {
         $var = "before";
-        $this->client->onMessage(function() use (&$var) {
+        $text = "Here is some text for test";
+
+        $client = new MessengerDoubler();
+        $client->setAccessToken($this->apiKey);
+        $client->setTargetUser($this->targetUser);
+        $client->setDataForInput($this->getTelegramRequestMockForMessage($text));
+        $client->onMessage(function($request) use (&$var, $text) {
+            /** @var Request $request */
             $var = "after";
+            $this->assertEquals($this->from["firstName"], $request->getUser()->getFirstName());
+            $this->assertEquals($this->from["lastName"], $request->getUser()->getLastName());
+            $this->assertEquals($this->from["username"], $request->getUser()->getUsername());
+            $this->assertEquals($text, $request->getMessage());
+            $this->assertEquals(Request::REQUEST_TYPE_MESSAGE, $request->getType());
         });
 
-        //TODO: Найти способ симуляции php://input
-
         $this->assertEquals("before", $var);
-        $this->client->checkEvents();
+        $client->checkEvents();
         $this->assertEquals("after", $var);
+    }
+
+    public function getTelegramRequestMockForMessage(string $text = "text"): string
+    {
+        $updateId = rand(0, 500);
+        $messageId = rand(0, 500);
+        $from = $this->from;
+        $targetUser = $this->targetUser;
+        $time = time();
+        $text = addslashes($text);
+
+        return <<<AOL
+{
+	"update_id": $updateId,
+	"message": {
+		"message_id": $messageId,
+		"from": {
+			"id": $targetUser,
+			"is_bot": false,
+			"first_name": "{$from["firstName"]}",
+			"last_name": "{$from["lastName"]}",
+			"username": "{$from["username"]}",
+			"language_code": "ru"
+		},
+		"chat": {
+			"id": $targetUser,
+			"first_name": "{$from["firstName"]}",
+			"last_name": "{$from["lastName"]}",
+			"username": "{$from["username"]}",
+			"type": "private"
+		},
+		"date": $time,
+		"text": "$text"
+	}
+}
+AOL;
     }
 
     /**

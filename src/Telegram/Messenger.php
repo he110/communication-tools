@@ -16,6 +16,7 @@ use He110\CommunicationTools\Exceptions\TargetUserException;
 use He110\CommunicationTools\MessengerEventsInterface;
 use He110\CommunicationTools\MessengerInterface;
 use He110\CommunicationTools\MessengerScreen;
+use He110\CommunicationTools\MessengerUser;
 use He110\CommunicationTools\MessengerWithTokenInterface;
 use He110\CommunicationTools\ScreenItems\Button;
 use He110\CommunicationTools\ScreenItems\File;
@@ -342,11 +343,11 @@ class Messenger implements MessengerInterface, MessengerWithTokenInterface, Mess
     public function checkEvents(): void
     {
         $request = $this->getRequest();
-        if (is_null($request->getType()))
-            return;
-        $key = spl_object_hash($this)."_".$request->getType();
-        if ($closure = EventController::getInstance()->getEvent($key))
-            $closure($request);
+        if ($request->getType()) {
+            $key = spl_object_hash($this) . "_" . $request->getType();
+            if ($closure = EventController::getInstance()->getEvent($key))
+                $closure($request);
+        }
     }
 
     /**
@@ -354,8 +355,38 @@ class Messenger implements MessengerInterface, MessengerWithTokenInterface, Mess
      */
     public function getRequest(): Request
     {
-        //TODO: Сделать разбор запроса и сборку объекта Request
-        $request = file_get_contents("php://input");
-        return (new Request())->setType(Request::REQUEST_TYPE_MESSAGE)->setMessage($request);
+        $data = $this->getPhpInput();
+        $request = new Request();
+        if ($data = json_decode($data, true)) {
+            if (isset($data["message"]) && $message = $data["message"]) {
+
+                $from = $message["from"];
+                $user = new MessengerUser();
+                $user->setFirstName($from["first_name"])
+                    ->setLastName($from["last_name"])
+                    ->setUsername($from["username"])
+                    ->setLanguageCode($from["language_code"]);
+
+                $request->setUser($user);
+
+                if (isset($message["text"])) {
+                    $request->setType(Request::REQUEST_TYPE_MESSAGE);
+                    $request->setMessage($message["text"]);
+                }
+            }
+        }
+        return $request;
     }
+
+    /**
+     * @return string
+     *
+     * @codeCoverageIgnoreStart
+     */
+    protected function getPhpInput(): string
+    {
+        return file_get_contents("php://input");
+    }
+
+    /** @codeCoverageIgnoreEnd */
 }
