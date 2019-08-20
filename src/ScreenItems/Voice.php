@@ -8,9 +8,6 @@
 
 namespace He110\CommunicationTools\ScreenItems;
 
-
-use He110\CommunicationTools\Exceptions\AttachmentNotFoundException;
-
 class Voice implements ScreenItemInterface
 {
     /** @var string */
@@ -21,11 +18,9 @@ class Voice implements ScreenItemInterface
 
     /**
      * @return string
-     * @throws AttachmentNotFoundException
      */
     public function getText(): string
     {
-        $this->recognize();
         return $this->text ?? "";
     }
 
@@ -33,7 +28,7 @@ class Voice implements ScreenItemInterface
      * @param string $text
      * @return Voice
      */
-    private function setText(string $text): self
+    public function setText(string $text): self
     {
         $this->text = $text;
         return $this;
@@ -59,7 +54,6 @@ class Voice implements ScreenItemInterface
 
     /**
      * @return array
-     * @throws AttachmentNotFoundException
      */
     public function toArray(): array
     {
@@ -93,24 +87,7 @@ class Voice implements ScreenItemInterface
     }
 
     /**
-     * @return bool
-     * @throws AttachmentNotFoundException
-     */
-    private function recognize(): bool
-    {
-        if (!$this->getPath())
-            return false;
-        if (!file_exists($this->getPath()))
-            throw new AttachmentNotFoundException("Voice file not found");
-        //TODO recognize
-        $text = "recognized";
-        $this->setText($text);
-        return true;
-    }
-
-    /**
      * @return string
-     * @throws AttachmentNotFoundException
      */
     public function __toString(): string
     {

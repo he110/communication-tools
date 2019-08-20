@@ -23,9 +23,6 @@ class VoiceTest extends TestCase
     /** @var string  */
     const VOICE_WAV = __DIR__."/../Assets/voice.wav";
 
-    /** @var string  */
-    const RECOGNIZED_TEXT = "recognized";
-
     /**
      * @covers \He110\CommunicationTools\ScreenItems\Voice::getPath()
      * @covers \He110\CommunicationTools\ScreenItems\Voice::setPath()
@@ -59,14 +56,12 @@ class VoiceTest extends TestCase
         $this->assertNotEquals($this->voice, $ob);
         $this->assertEquals(Voice::class, get_class($ob));
         $this->assertEquals(static::VOICE_OGG, $ob->getPath());
-        $this->assertEquals(static::RECOGNIZED_TEXT, $ob->getText());
     }
 
     /**
      * @covers \He110\CommunicationTools\ScreenItems\Voice::__toString()
      * @covers \He110\CommunicationTools\ScreenItems\Voice::getText()
      * @covers \He110\CommunicationTools\ScreenItems\Voice::setText()
-     * @covers \He110\CommunicationTools\ScreenItems\Voice::recognize()
      */
     public function testGetText()
     {
@@ -78,7 +73,7 @@ class VoiceTest extends TestCase
             $this->assertEquals(AttachmentNotFoundException::class, get_class($e));
         }
         $this->voice->setPath(static::VOICE_OGG);
-        $this->assertEquals(static::RECOGNIZED_TEXT, $this->voice->getText());
+        $this->voice->setText("Some text");
         $this->assertEquals((string)$this->voice, $this->voice->getText());
     }
 
