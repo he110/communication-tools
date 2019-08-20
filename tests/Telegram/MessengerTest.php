@@ -187,6 +187,7 @@ class MessengerTest extends TestCase
      * @covers \He110\CommunicationTools\Telegram\Messenger::onMessage()
      * @covers \He110\CommunicationTools\Telegram\Messenger::getRequest()
      * @covers \He110\CommunicationTools\Telegram\Messenger::checkEvents()
+     * @covers \He110\CommunicationTools\Telegram\Messenger::addEvent()
      */
     public function testOnMessage()
     {

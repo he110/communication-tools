@@ -315,8 +315,7 @@ class Messenger implements MessengerInterface, MessengerWithTokenInterface, Mess
      */
     public function onMessage(\Closure $closure)
     {
-        $key = spl_object_hash($this)."_".Request::REQUEST_TYPE_MESSAGE;
-        EventController::getInstance()->addEvent($key, $closure);
+        $this->addEvent(Request::REQUEST_TYPE_MESSAGE, $closure);
     }
 
     /**
@@ -324,8 +323,7 @@ class Messenger implements MessengerInterface, MessengerWithTokenInterface, Mess
      */
     public function onMessageRead(\Closure $closure)
     {
-        $key = spl_object_hash($this)."_".Request::REQUEST_TYPE_MESSAGE_READ;
-        EventController::getInstance()->addEvent($key, $closure);
+        $this->addEvent(Request::REQUEST_TYPE_MESSAGE_READ, $closure);
     }
 
     /**
@@ -333,7 +331,16 @@ class Messenger implements MessengerInterface, MessengerWithTokenInterface, Mess
      */
     public function onButtonClick(\Closure $closure)
     {
-        $key = spl_object_hash($this)."_".Request::REQUEST_TYPE_BUTTON_CLICK;
+        $this->addEvent(Request::REQUEST_TYPE_BUTTON_CLICK, $closure);
+    }
+
+    /**
+     * @param string $type
+     * @param \Closure $closure
+     */
+    private function addEvent(string $type, \Closure $closure): void
+    {
+        $key = spl_object_hash($this)."_".$type;
         EventController::getInstance()->addEvent($key, $closure);
     }
 
