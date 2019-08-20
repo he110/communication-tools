@@ -15,10 +15,60 @@ $ composer require he110/communication-tools
 
 ## Basic Usage
 
+### Messenger's clients
 ```php
 <?php
 
-//TODO
+// Telegram client's taken as an example. You can use other
+use He110\CommunicationTools\Telegram\Messenger;
+use He110\CommunicationTools\MessengerScreen;
+
+$messenger = new Messenger();
+$messenger->setAccessToken(YOUR_TOKEN_HERE);
+
+// If you want, to send simple text message
+$messenger->sendMessage("Your message text here");
+
+// To send image use method sendImage
+$messenger->sendImage("path/to/file", "(Optional) Your text description");
+// or, to send document...
+$messenger->sendDocument("path/to/file", "(Optional) Your text description");
+// you can also send voice files
+$messenger->sendVoice("path/to/file");
+
+// If you wanna use buttons, it's better way to use MessengerScreen
+$screen = new MessengerScreen();
+$screen->addMessage("Your message text here");
+$screen->addButtonText("Text button");
+$screen->addButtonLink("URL button", "https://google.com");
+$messenger->sendScreen($screen);
+
+```
+
+### Multiple messengers
+```php
+<?php
+
+// Telegram client's taken as an example. You can use other
+use He110\CommunicationTools\MessengerPool;
+use He110\CommunicationTools\Telegram\Messenger;
+use He110\CommunicationTools\MessengerScreen;
+
+$messenger = new Messenger();
+$messenger->setAccessToken(YOUR_TOKEN_HERE);
+
+// Pool allows you to use multiple messengers as one
+$pool = new MessengerPool();
+$pool->add($messenger);
+
+$pool->sendMessage("Your message text here");
+
+// If you wanna use buttons, it's better way to use MessengerScreen
+$screen = new MessengerScreen();
+$screen->addMessage("Your message text here");
+$screen->addButtonText("Text button");
+$screen->addButtonLink("URL button", "https://google.com");
+$pool->sendScreen($screen);
 
 ```
 
