@@ -11,8 +11,8 @@ namespace He110\CommunicationTools;
 
 class Request
 {
-    /** @var string|null */
-    private $userId;
+    /** @var MessengerUser|null */
+    private $user;
 
     /** @var string|null */
     private $type;
@@ -28,22 +28,24 @@ class Request
     const REQUEST_TYPE_BUTTON_CLICK = "button_click";
 
     /**
-     * @return string|null
+     * @return MessengerUser|null
      */
-    public function getUserId(): ?string
+    public function getUser(): ?MessengerUser
     {
-        return $this->userId;
+        return $this->user;
     }
 
     /**
-     * @param string $userId
+     * @param MessengerUser|null $user
      * @return Request
      */
-    public function setUserId(string $userId): self
+    public function setUser(?MessengerUser $user): self
     {
-        $this->userId = $userId;
+        $this->user = $user;
         return $this;
     }
+
+
 
     /**
      * @return string|null

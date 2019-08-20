@@ -8,6 +8,7 @@
 
 namespace He110\CommunicationToolsTests;
 
+use He110\CommunicationTools\MessengerUser;
 use He110\CommunicationTools\Request;
 use PHPUnit\Framework\TestCase;
 
@@ -28,14 +29,18 @@ class RequestTest extends TestCase
     }
 
     /**
-     * @covers \He110\CommunicationTools\Request::setUserId()
-     * @covers \He110\CommunicationTools\Request::getUserId()
+     * @covers \He110\CommunicationTools\Request::setUser()
+     * @covers \He110\CommunicationTools\Request::getUser()
      */
-    public function testSetUserId()
+    public function testSetUser()
     {
-        $this->assertNull($this->request->getUserId());
-        $this->request->setUserId(__METHOD__);
-        $this->assertEquals(__METHOD__, $this->request->getUserId());
+        $this->assertNull($this->request->getUser());
+        $user = new MessengerUser();
+        $user->setFirstName("Ivan");
+        $user->setLastName("Ivanov");
+        $this->request->setUser($user);
+        $this->assertEquals($user, $this->request->getUser());
+        $this->assertEquals("Ivan Ivanov", (string)$this->request->getUser());
     }
 
     /**
