@@ -9,20 +9,16 @@
 namespace He110\CommunicationTools\Telegram;
 
 
-use He110\CommunicationTools\EventController;
 use He110\CommunicationTools\Exceptions\AccessTokenException;
 use He110\CommunicationTools\Exceptions\AttachmentNotFoundException;
 use He110\CommunicationTools\Exceptions\TargetUserException;
-use He110\CommunicationTools\MessengerEventsInterface;
 use He110\CommunicationTools\MessengerInterface;
 use He110\CommunicationTools\MessengerScreen;
-use He110\CommunicationTools\MessengerUser;
 use He110\CommunicationTools\MessengerWithTokenInterface;
 use He110\CommunicationTools\ScreenItems\Button;
 use He110\CommunicationTools\ScreenItems\File;
 use He110\CommunicationTools\ScreenItems\ScreenItemInterface;
 use He110\CommunicationTools\ScreenItems\Voice;
-use He110\CommunicationTools\Request;
 use TelegramBot\Api\BotApi;
 use TelegramBot\Api\Types\Message;
 
@@ -97,22 +93,7 @@ class Messenger extends MessengerEvents implements MessengerInterface, Messenger
      */
     public function sendImage(string $pathToFile, string $description = null, array $buttons = []): bool
     {
-        $this->checkRequirements();
-        $document = $this->prepareFile($pathToFile);
-        try {
-            $keyboard = $this->generateButtonMarkup($buttons);
-            $result = $this->client->sendPhoto(
-                $this->getTargetUser(),
-                $document,
-                $description,
-                null,
-                $keyboard
-            );
-            return $this->checkRequestResult($result);
-        } catch (\Exception $exception) {
-            return false;
-        }
-
+        return $this->workWithAttachment("image", $pathToFile, $description, $buttons);
     }
 
     /**
@@ -128,11 +109,27 @@ class Messenger extends MessengerEvents implements MessengerInterface, Messenger
      */
     public function sendDocument(string $pathToFile, string $description = null, array $buttons = []): bool
     {
+        return $this->workWithAttachment("document", $pathToFile, $description, $buttons);
+    }
+
+    /**
+     * @param string $type
+     * @param $pathToFile
+     * @param $description
+     * @param $buttons
+     * @return bool
+     * @throws AccessTokenException
+     * @throws AttachmentNotFoundException
+     * @throws TargetUserException
+     */
+    private function workWithAttachment(string $type, $pathToFile, $description, $buttons): bool
+    {
+        $method = $type == "image" ? "sendPhoto" : "sendDocument";
         $this->checkRequirements();
         $document = $this->prepareFile($pathToFile);
         try {
             $keyboard = $this->generateButtonMarkup($buttons);
-            $result = $this->client->sendDocument(
+            $result = $this->client->{$method}(
                 $this->getTargetUser(),
                 $document,
                 $description,
