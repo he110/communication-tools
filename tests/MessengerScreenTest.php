@@ -152,6 +152,8 @@ class MessengerScreenTest extends TestCase
 
     /**
      * @covers \He110\CommunicationTools\MessengerScreen::fixItemsOrder()
+     * @covers \He110\CommunicationTools\MessengerScreen::fixItemsOrderBuffer()
+     * @covers \He110\CommunicationTools\MessengerScreen::fixItemsOrderSorter()
      */
     public function testFixContentOrder()
     {
