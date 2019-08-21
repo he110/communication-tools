@@ -166,34 +166,23 @@ class MessengerScreen
         $buttons = [];
         $lastItem = null;
         $acceptableItem = null;
-        foreach ($content as $index => $item)
-            $this->fixItemsOrderBuffer($item, $buttons, $index, $lastItem, $acceptableItem);
+        foreach ($content as $index => $item) {
+            if ($item instanceof Button) {
+                $buttons[] = $item;
+            } else {
+                $lastItem = $index;
+                if (!($item instanceof Voice)) {
+                    $acceptableItem = $lastItem;
+                } else {
+                    $buttons = [];
+                }
+            }
+        }
 
         if ($buttons && $content[$lastItem] instanceof Voice)
             $this->fixItemsOrderSorter($acceptableItem, $lastItem, $content, $buttons);
 
         return $content;
-    }
-
-    /**
-     * @param $item
-     * @param $buttons
-     * @param $index
-     * @param $lastItem
-     * @param $acceptableItem
-     */
-    private function fixItemsOrderBuffer($item, &$buttons, $index, &$lastItem, &$acceptableItem): void
-    {
-        if ($item instanceof Button) {
-            $buttons[] = $item;
-        } else {
-            $lastItem = $index;
-            if (!($item instanceof Voice)) {
-                $acceptableItem = $lastItem;
-            } else {
-                $buttons = [];
-            }
-        }
     }
 
     /**

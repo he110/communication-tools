@@ -19,6 +19,7 @@ use He110\CommunicationTools\ScreenItems\Button;
 use He110\CommunicationTools\ScreenItems\File;
 use He110\CommunicationTools\ScreenItems\ScreenItemInterface;
 use He110\CommunicationTools\ScreenItems\Voice;
+use He110\CommunicationToolsTests\ScreenItems\FileTest;
 use TelegramBot\Api\BotApi;
 use TelegramBot\Api\Types\Message;
 
@@ -188,10 +189,8 @@ class Messenger extends MessengerEvents implements MessengerInterface, Messenger
             return $this->sendMessage($item->getText(), $buttons);
 
         elseif ($item instanceof File) {
-            if ($item->getType() === File::FILE_TYPE_IMAGE)
-                return $this->sendImage($item->getPath(), $item->getDescription());
-            else
-                return $this->sendDocument($item->getPath(), $item->getDescription());
+            $method = $item->getType() == File::FILE_TYPE_IMAGE ? "sendImage" : "sendDocument";
+            return $this->{$method}($item->getPath(), $item->getDescription());
         }
 
         elseif ($item instanceof Voice)
