@@ -97,6 +97,9 @@ class MessengerEventsTest extends TestCase
         });
 
         $client->checkEvents();
+
+        $client->setDataForInput($this->getTelegramRequestMockForCallback("invalid callback"));
+        $client->getRequest();
     }
 
     /**

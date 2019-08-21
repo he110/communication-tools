@@ -27,14 +27,16 @@ class MessengerEvents implements MessengerEventsInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @codeCoverageIgnoreStart
      */
     public function onMessageRead(\Closure $closure)
     {
-        // @codeCoverageIgnoreStart
+
         // TODO: Найти способ получить такой event
         $this->addEvent(Request::REQUEST_TYPE_MESSAGE_READ, $closure);
-        // @codeCoverageIgnoreEnd
     }
+    /** @codeCoverageIgnoreEnd */
 
     /**
      * {@inheritdoc}
@@ -116,7 +118,7 @@ class MessengerEvents implements MessengerEventsInterface
                 case Button::BUTTON_TYPE_CALLBACK:
                     $request->setPayload($payload);
                     break;
-                case Button::BUTTON_TYPE_TEXT:
+                default:
                     $request->setMessage($payload);
                     break;
             }
@@ -125,11 +127,11 @@ class MessengerEvents implements MessengerEventsInterface
     }
 
     /**
-     * @param string $payload
+     * @param string|null $payload
      * @param null $data
      * @return string
      */
-    private function detectPayloadType(string $payload, &$data = null): string
+    private function detectPayloadType(string $payload, &$data = null): ?string
     {
         if (substr($payload, 0, 4) === "clb=") {
             $data = substr($payload, 4);
@@ -137,6 +139,8 @@ class MessengerEvents implements MessengerEventsInterface
         } elseif (substr($payload, 0, 5) === "text=") {
             $data = substr($payload, 5);
             return Button::BUTTON_TYPE_TEXT;
+        } else {
+            return null;
         }
     }
 
