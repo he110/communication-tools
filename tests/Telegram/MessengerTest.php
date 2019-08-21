@@ -12,8 +12,6 @@ use He110\CommunicationTools\Exceptions\AccessTokenException;
 use He110\CommunicationTools\Exceptions\AttachmentNotFoundException;
 use He110\CommunicationTools\Exceptions\TargetUserException;
 use He110\CommunicationTools\MessengerScreen;
-use He110\CommunicationTools\MessengerUser;
-use He110\CommunicationTools\Request;
 use He110\CommunicationTools\ScreenItems\Button;
 use He110\CommunicationTools\Telegram\Messenger;
 use He110\CommunicationToolsTests\ScreenItems\FileTest;
@@ -23,20 +21,13 @@ use PHPUnit\Framework\TestCase;
 class MessengerTest extends TestCase
 {
     /** @var string  */
-    private $apiKey = "895440583:AAFMQ2yQrTH3JMgrCZ_fsCmrLhlgaCAQpeQ";
+    const API_KEY = "895440583:AAFMQ2yQrTH3JMgrCZ_fsCmrLhlgaCAQpeQ";
 
     /** @var int */
-    private $targetUser = 62847152;
+    const TARGET_USER = 62847152;
 
     /** @var Messenger */
     private $client;
-
-    /** @var array */
-    private $from = [
-        "firstName" => "Ivan",
-        "lastName" => "Ivanov",
-        "username" => "IvanTest"
-    ];
 
     /**
      * @covers \He110\CommunicationTools\Telegram\Messenger::sendMessage()
@@ -120,7 +111,7 @@ class MessengerTest extends TestCase
      */
     public function testSetAccessToken()
     {
-        $this->assertEquals($this->apiKey, $this->client->getAccessToken());
+        $this->assertEquals(static::API_KEY, $this->client->getAccessToken());
         $newToken = md5(rand(1,100));
 
         $this->client->setAccessToken($newToken);
@@ -184,210 +175,6 @@ class MessengerTest extends TestCase
     }
 
     /**
-     * @covers \He110\CommunicationTools\Telegram\Messenger::onMessage()
-     * @covers \He110\CommunicationTools\Telegram\Messenger::getRequest()
-     * @covers \He110\CommunicationTools\Telegram\Messenger::checkEvents()
-     * @covers \He110\CommunicationTools\Telegram\Messenger::addEvent()
-     * @covers \He110\CommunicationTools\Telegram\Messenger::detectPayloadType()
-     * @covers \He110\CommunicationTools\Telegram\Messenger::setUserFromRequest()
-     * @covers \He110\CommunicationTools\Telegram\Messenger::buildMessageRequest()
-     */
-    public function testOnMessage()
-    {
-        $var = "before";
-        $text = "Here is some text for test";
-
-        $client = new MessengerDoubler();
-        $client->setAccessToken($this->apiKey);
-        $client->setTargetUser($this->targetUser);
-        $client->setDataForInput($this->getTelegramRequestMockForMessage($text));
-        $client->onMessage(function($request) use (&$var, $text) {
-            /** @var Request $request */
-            $var = "after";
-            $this->checkRequestUser($request);
-            $this->assertEquals($text, $request->getMessage());
-            $this->assertEquals(Request::REQUEST_TYPE_MESSAGE, $request->getType());
-        });
-
-        $this->assertEquals("before", $var);
-        $client->checkEvents();
-        $this->assertEquals("after", $var);
-    }
-
-    /**
-     * @covers \He110\CommunicationTools\Telegram\Messenger::onButtonClick()
-     * @covers \He110\CommunicationTools\Telegram\Messenger::getRequest()
-     * @covers \He110\CommunicationTools\Telegram\Messenger::checkEvents()
-     * @covers \He110\CommunicationTools\Telegram\Messenger::addEvent()
-     * @covers \He110\CommunicationTools\Telegram\Messenger::detectPayloadType()
-     * @covers \He110\CommunicationTools\Telegram\Messenger::setUserFromRequest()
-     * @covers \He110\CommunicationTools\Telegram\Messenger::buildButtonClickRequest()
-     */
-    public function testOnButtonClick()
-    {
-        $var = "before";
-
-        $client = new MessengerDoubler();
-        $client->setAccessToken($this->apiKey);
-        $client->setTargetUser($this->targetUser);
-        $client->setDataForInput($this->getTelegramRequestMockForCallback());
-        $client->onButtonClick(function($request) use (&$var) {
-            /** @var Request $request */
-            $var = "after";
-            $this->checkRequestUser($request);
-            $this->assertEmpty($request->getMessage());
-            $this->assertEquals("callbackFunctionText", $request->getPayload());
-            $this->assertEquals(Request::REQUEST_TYPE_BUTTON_CLICK, $request->getType());
-        });
-
-        $this->assertEquals("before", $var);
-        $client->checkEvents();
-        $this->assertEquals("after", $var);
-
-        $buttonText = "Message callback";
-        $client->setDataForInput($this->getTelegramRequestMockForCallback("text=$buttonText"));
-        $client->onButtonClick(function($request) use ($buttonText) {
-            /** @var Request $request */
-            $this->checkRequestUser($request);
-            $this->assertNotEmpty($request->getMessage());
-            $this->assertNull($request->getPayload());
-            $this->assertEquals(Request::REQUEST_TYPE_BUTTON_CLICK, $request->getType());
-            $this->assertEquals($buttonText, $request->getMessage());
-        });
-
-        $client->checkEvents();
-    }
-
-    /**
-     * @param Request $request
-     */
-    private function checkRequestUser(Request &$request): void
-    {
-        $this->assertEquals($this->from["firstName"], $request->getUser()->getFirstName());
-        $this->assertEquals($this->from["lastName"], $request->getUser()->getLastName());
-        $this->assertEquals($this->from["username"], $request->getUser()->getUsername());
-    }
-
-    /**
-     * @param string $text
-     * @return string
-     */
-    public function getTelegramRequestMockForMessage(string $text = "text"): string
-    {
-        $updateId = rand(0, 500);
-        $messageId = rand(0, 500);
-        $from = $this->from;
-        $targetUser = $this->targetUser;
-        $time = time();
-        $text = addslashes($text);
-
-        return <<<AOL
-{
-	"update_id": $updateId,
-	"message": {
-		"message_id": $messageId,
-		"from": {
-			"id": $targetUser,
-			"is_bot": false,
-			"first_name": "{$from["firstName"]}",
-			"last_name": "{$from["lastName"]}",
-			"username": "{$from["username"]}",
-			"language_code": "ru"
-		},
-		"chat": {
-			"id": $targetUser,
-			"first_name": "{$from["firstName"]}",
-			"last_name": "{$from["lastName"]}",
-			"username": "{$from["username"]}",
-			"type": "private"
-		},
-		"date": $time,
-		"text": "$text"
-	}
-}
-AOL;
-    }
-
-    /**
-     * @param string $callback
-     * @return string
-     */
-    public function getTelegramRequestMockForCallback(string $callback = "clb=callbackFunctionText"): string
-    {
-        $updateId = rand(0, 500);
-        $messageId = rand(0, 500);
-        $from = $this->from;
-        $targetUser = $this->targetUser;
-        $time = time();
-        $callback = addslashes($callback);
-
-        return <<<AOL
-{
-	"update_id": $updateId,
-	"callback_query": {
-		"id": "269926465975705956",
-		"from": {
-			"id": $targetUser,
-			"is_bot": false,
-			"first_name": "{$from["firstName"]}",
-			"last_name": "{$from["lastName"]}",
-			"username": "{$from["username"]}",
-			"language_code": "ru"
-		},
-		"message": {
-			"message_id": $messageId,
-			"from": {
-				"id": 11111111,
-				"is_bot": true,
-				"first_name": "Bot Name",
-				"username": "DemoMockBot"
-			},
-			"chat": {
-				"id": $targetUser,
-				"first_name": "{$from["firstName"]}",
-				"last_name": "{$from["lastName"]}",
-				"username": "{$from["username"]}",
-				"type": "private"
-			},
-			"date": $time,
-			"document": {
-				"file_name": "image.jpg",
-				"mime_type": "image/jpeg",
-				"thumb": {
-					"file_id": "AAQCAAPJAwACMbzpSjEoI32WysFvoBe7DwAEAQAHbQADbbgAAhYE",
-					"file_size": 14733,
-					"width": 320,
-					"height": 320
-				},
-				"file_id": "BQADAgADyQMAAjG86UoxKCN9lsrBbxYE",
-				"file_size": 39481
-			},
-			"caption": "Document caption",
-			"reply_markup": {
-				"inline_keyboard": [
-					[{
-						"text": "Link",
-						"url": "https://zobenko.ru/"
-					}],
-					[{
-						"text": "Text",
-						"callback_data": "text=Text"
-					}],
-					[{
-						"text": "Callback",
-						"callback_data": "clb=callbackFunctionText"
-					}]
-				]
-			}
-		},
-		"chat_instance": "6200504894528308608",
-		"data": "$callback"
-	}
-}
-AOL;
-    }
-
-    /**
      * @return array
      */
     public function generateButtons(): array
@@ -413,8 +200,8 @@ AOL;
     public function setUp(): void
     {
         $this->client = new Messenger();
-        $this->client->setAccessToken($this->apiKey);
-        $this->client->setTargetUser($this->targetUser);
+        $this->client->setAccessToken(static::API_KEY);
+        $this->client->setTargetUser(static::TARGET_USER);
     }
 
     public function tearDown(): void
