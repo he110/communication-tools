@@ -166,18 +166,7 @@ class MessengerScreen
         $buttons = [];
         $lastItem = null;
         $acceptableItem = null;
-        foreach ($content as $index => $item) {
-            if ($item instanceof Button) {
-                $buttons[] = $item;
-            } else {
-                $lastItem = $index;
-                if (!($item instanceof Voice)) {
-                    $acceptableItem = $lastItem;
-                } else {
-                    $buttons = [];
-                }
-            }
-        }
+        $this->fixItemsOrderHelper($content, $buttons, $lastItem, $acceptableItem);
 
         if ($buttons && $content[$lastItem] instanceof Voice)
             $this->fixItemsOrderSorter($acceptableItem, $lastItem, $content, $buttons);
@@ -199,5 +188,27 @@ class MessengerScreen
         }
         $content = array_slice($content, 0, count($content) - count($buttons));
         Helpers::array_insert($content, $acceptableItem + 1, $buttons);
+    }
+
+    /**
+     * @param $content
+     * @param $buttons
+     * @param $lastItem
+     * @param $acceptableItem
+     */
+    private function fixItemsOrderHelper($content, &$buttons, &$lastItem, &$acceptableItem): void
+    {
+        foreach ($content as $index => $item) {
+            if ($item instanceof Button) {
+                $buttons[] = $item;
+            } else {
+                $lastItem = $index;
+                if (!($item instanceof Voice)) {
+                    $acceptableItem = $lastItem;
+                } else {
+                    $buttons = [];
+                }
+            }
+        }
     }
 }
