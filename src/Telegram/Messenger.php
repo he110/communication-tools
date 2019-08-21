@@ -352,6 +352,11 @@ class Messenger implements MessengerInterface, MessengerWithTokenInterface, Mess
         $request = $this->getRequest();
         if ($request->getType()) {
             $key = spl_object_hash($this) . "_" . $request->getType();
+            if ($request->getType() == Request::REQUEST_TYPE_BUTTON_CLICK) {
+                try {
+                    $this->client->sendChatAction($this->getTargetUser(), "Successfully");
+                } catch (\Exception $e) {}
+            }
             if ($closure = EventController::getInstance()->getEvent($key))
                 $closure($request);
         }
