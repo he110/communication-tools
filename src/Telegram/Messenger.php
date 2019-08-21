@@ -323,6 +323,7 @@ class Messenger implements MessengerInterface, MessengerWithTokenInterface, Mess
      */
     public function onMessageRead(\Closure $closure)
     {
+        // TODO: Найти способ получить такой event
         $this->addEvent(Request::REQUEST_TYPE_MESSAGE_READ, $closure);
     }
 
