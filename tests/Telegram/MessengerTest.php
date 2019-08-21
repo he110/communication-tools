@@ -68,6 +68,7 @@ class MessengerTest extends TestCase
     /**
      * @covers \He110\CommunicationTools\Telegram\Messenger::sendScreen()
      * @covers \He110\CommunicationTools\Telegram\Messenger::workWithScreenItem()
+     * @covers \He110\CommunicationTools\Telegram\Messenger::sendScreenHelper()
      */
     public function testSendScreen()
     {
@@ -125,6 +126,7 @@ class MessengerTest extends TestCase
      * @covers \He110\CommunicationTools\Telegram\Messenger::prepareFile()
      * @covers \He110\CommunicationTools\Telegram\Messenger::generateButtonMarkup()
      * @covers \He110\CommunicationTools\Telegram\Messenger::buttonToArray()
+     * @covers \He110\CommunicationTools\Telegram\Messenger::workWithAttachment()
      */
     public function testSendImage()
     {
@@ -153,6 +155,7 @@ class MessengerTest extends TestCase
      * @covers \He110\CommunicationTools\Telegram\Messenger::prepareFile()
      * @covers \He110\CommunicationTools\Telegram\Messenger::generateButtonMarkup()
      * @covers \He110\CommunicationTools\Telegram\Messenger::buttonToArray()
+     * @covers \He110\CommunicationTools\Telegram\Messenger::workWithAttachment()
      */
     public function testSendDocument()
     {

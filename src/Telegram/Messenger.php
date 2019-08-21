@@ -175,14 +175,7 @@ class Messenger extends MessengerEvents implements MessengerInterface, Messenger
             if ($item instanceof Button)
                 $buttons[] = $item;
             else {
-                if ($current === null) {
-                    $current = $item;
-                } elseif ($current !== $item && $current !== null) {
-                    $result = $result && $this->workWithScreenItem($current, $buttons);
-                    if (!($current instanceof Voice))
-                        $buttons = [];
-                    $current = $item;
-                }
+                list($current, $result, $buttons) = $this->sendScreenHelper($current, $item, $result, $buttons);
             }
         }
         $this->workWithScreenItem($current, $buttons);
@@ -191,18 +184,18 @@ class Messenger extends MessengerEvents implements MessengerInterface, Messenger
 
     private function workWithScreenItem(ScreenItemInterface $item, array $buttons = []): bool
     {
-        $result = true;
+        $result = false;
         if ($item instanceof \He110\CommunicationTools\ScreenItems\Message)
-            $result = $result && $this->sendMessage($item->getText(), $buttons);
+            $result = $this->sendMessage($item->getText(), $buttons);
         elseif ($item instanceof File) {
             if ($item->getType() === File::FILE_TYPE_IMAGE)
-                $result = $result && $this->sendImage($item->getPath(), $item->getDescription());
+                $result =  $this->sendImage($item->getPath(), $item->getDescription());
             else {
-                $result = $result && $this->sendDocument($item->getPath(), $item->getDescription());
+                $result = $this->sendDocument($item->getPath(), $item->getDescription());
             }
         }
         elseif ($item instanceof Voice)
-            $result = $result && $this->sendVoice($item->getPath());
+            $result = $this->sendVoice($item->getPath());
         return $result;
     }
 
@@ -305,5 +298,26 @@ class Messenger extends MessengerEvents implements MessengerInterface, Messenger
                 )
             );
         }
+    }
+
+    /**
+     * @param $current
+     * @param $item
+     * @param $result
+     * @param $buttons
+     * @return array
+     */
+    private function sendScreenHelper($current, $item, $result, $buttons): array
+    {
+        if ($current === null) {
+            $current = $item;
+        } elseif ($current !== $item && $current !== null) {
+            $result = $result && $this->workWithScreenItem($current, $buttons);
+            if (!($current instanceof Voice)) {
+                $buttons = [];
+            }
+            $current = $item;
+        }
+        return array($current, $result, $buttons);
     }
 }

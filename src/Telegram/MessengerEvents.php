@@ -30,8 +30,10 @@ class MessengerEvents implements MessengerEventsInterface
      */
     public function onMessageRead(\Closure $closure)
     {
+        // @codeCoverageIgnoreStart
         // TODO: Найти способ получить такой event
         $this->addEvent(Request::REQUEST_TYPE_MESSAGE_READ, $closure);
+        // @codeCoverageIgnoreEnd
     }
 
     /**
@@ -70,13 +72,14 @@ class MessengerEvents implements MessengerEventsInterface
      */
     public function getRequest(): Request
     {
-        $data = $this->getPhpInput();
         $request = new Request();
-        if ($data = json_decode($data, true)) {
-            if (isset($data["message"]) && $message = $data["message"])
-                $request = $this->buildMessageRequest($request, $message);
-            elseif (isset($data["callback_query"]) && $clb = $data["callback_query"])
-                $request = $this->buildButtonClickRequest($request, $clb);
+        if ($data = json_decode($this->getPhpInput(), true)) {
+
+            if (isset($data["message"]))
+                $request = $this->buildMessageRequest($request, $data["message"]);
+
+            elseif (isset($data["callback_query"]))
+                $request = $this->buildButtonClickRequest($request, $data["callback_query"]);
         }
         return $request;
     }
