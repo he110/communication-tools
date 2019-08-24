@@ -48,7 +48,13 @@ class ViberMessenger implements MessengerInterface, MessengerWithTokenInterface
     }
 
     /**
-     * {@inheritdoc
+     * {@inheritdoc}
+     *
+     * @param string $text
+     * @param array $buttons
+     * @return bool
+     * @throws AccessTokenException
+     * @throws TargetUserException
      */
     public function sendMessage(string $text, array $buttons = []): bool
     {
@@ -63,20 +69,71 @@ class ViberMessenger implements MessengerInterface, MessengerWithTokenInterface
 
             $result = $this->client->getClient()->sendMessage($message);
 
-            return $result instanceof Response && $result->getData()["status_message"] === "ok";
+            return $this->checkRequestResult($result);
         } catch (\Exception $exception) {
             return false;
         }
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @param string $pathToFile
+     * @param string|null $description
+     * @param array $buttons
+     * @return bool
+     * @throws AccessTokenException
+     * @throws TargetUserException
+     */
     public function sendImage(string $pathToFile, string $description = null, array $buttons = []): bool
     {
-        // TODO: Implement sendImage() method.
+        $this->checkRequirements();
+        try {
+            $message = (new \Viber\Api\Message\Picture())
+                ->setReceiver($this->getTargetUser())
+                ->setMedia($pathToFile) //TODO Придумать, как преобразовать в URL
+                ->setText($description);
+
+            if (!empty($buttons))
+                $message->setKeyboard($this->createViberKeyboard($buttons));
+
+
+            $result = $this->client->getClient()->sendMessage($message);
+
+            return $this->checkRequestResult($result);
+        } catch (\Exception $exception) {
+            return false;
+        }
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @param string $pathToFile
+     * @param string|null $description
+     * @param array $buttons
+     * @return bool
+     * @throws AccessTokenException
+     * @throws TargetUserException
+     */
     public function sendDocument(string $pathToFile, string $description = null, array $buttons = []): bool
     {
-        // TODO: Implement sendDocument() method.
+        $this->checkRequirements();
+        try {
+            $message = (new \Viber\Api\Message\File())
+                ->setReceiver($this->getTargetUser())
+                ->setMedia($pathToFile); //TODO Придумать, как преобразовать в URL
+
+            if (!empty($buttons))
+                $message->setKeyboard($this->createViberKeyboard($buttons));
+
+
+            $result = $this->client->getClient()->sendMessage($message);
+            $additional = ($description == null || $description != null && $this->sendMessage($description));
+            return $this->checkRequestResult($result) && $additional;
+        } catch (\Exception $exception) {
+            return false;
+        }
     }
 
     public function sendVoice(string $pathToFile): bool
@@ -98,6 +155,9 @@ class ViberMessenger implements MessengerInterface, MessengerWithTokenInterface
         $this->client = new Bot(["token" => $token]);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getAccessToken(): ?string
     {
         return $this->accessToken;
@@ -173,5 +233,14 @@ class ViberMessenger implements MessengerInterface, MessengerWithTokenInterface
         }
         $keyboard->setButtons($converted);
         return $keyboard;
+    }
+
+    /**
+     * @param $result
+     * @return bool
+     */
+    private function checkRequestResult($result): bool
+    {
+        return $result instanceof Response && $result->getData()["status_message"] === "ok";
     }
 }

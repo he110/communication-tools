@@ -73,7 +73,7 @@ class TelegramMessenger extends TelegramMessengerEvents implements MessengerInte
                 $keyboard
             );
 
-            return method_exists($result, "getMessageId") && $result->getMessageId();
+            return $this->checkRequestResult($result);
         } catch (\Exception $exception) {
             return false;
         }
