@@ -9,12 +9,12 @@
 namespace He110\CommunicationToolsTests\Telegram;
 
 use He110\CommunicationTools\Request;
-use He110\CommunicationTools\Telegram\Messenger;
+use He110\CommunicationTools\Telegram\TelegramMessenger;
 use PHPUnit\Framework\TestCase;
 
-class MessengerEventsTest extends TestCase
+class TelegramMessengerEventsTest extends TestCase
 {
-    /** @var Messenger */
+    /** @var TelegramMessenger */
     private $client;
 
     /** @var array */
@@ -25,22 +25,22 @@ class MessengerEventsTest extends TestCase
     ];
 
     /**
-     * @covers \He110\CommunicationTools\Telegram\MessengerEvents::onMessage()
-     * @covers \He110\CommunicationTools\Telegram\MessengerEvents::getRequest()
-     * @covers \He110\CommunicationTools\Telegram\MessengerEvents::checkEvents()
-     * @covers \He110\CommunicationTools\Telegram\MessengerEvents::addEvent()
-     * @covers \He110\CommunicationTools\Telegram\MessengerEvents::detectPayloadType()
-     * @covers \He110\CommunicationTools\Telegram\MessengerEvents::setUserFromRequest()
-     * @covers \He110\CommunicationTools\Telegram\MessengerEvents::buildMessageRequest()
+     * @covers \He110\CommunicationTools\Telegram\TelegramMessengerEvents::onMessage()
+     * @covers \He110\CommunicationTools\Telegram\TelegramMessengerEvents::getRequest()
+     * @covers \He110\CommunicationTools\Telegram\TelegramMessengerEvents::checkEvents()
+     * @covers \He110\CommunicationTools\Telegram\TelegramMessengerEvents::addEvent()
+     * @covers \He110\CommunicationTools\Telegram\TelegramMessengerEvents::detectPayloadType()
+     * @covers \He110\CommunicationTools\Telegram\TelegramMessengerEvents::setUserFromRequest()
+     * @covers \He110\CommunicationTools\Telegram\TelegramMessengerEvents::buildMessageRequest()
      */
     public function testOnMessage()
     {
         $var = "before";
         $text = "Here is some text for test";
 
-        $client = new MessengerDoubler();
-        $client->setAccessToken(MessengerTest::API_KEY);
-        $client->setTargetUser(MessengerTest::TARGET_USER);
+        $client = new TelegramMessengerDoubler();
+        $client->setAccessToken(TelegramMessengerTest::API_KEY);
+        $client->setTargetUser(TelegramMessengerTest::TARGET_USER);
         $client->setDataForInput($this->getTelegramRequestMockForMessage($text));
         $client->onMessage(function($request) use (&$var, $text) {
             /** @var Request $request */
@@ -56,21 +56,21 @@ class MessengerEventsTest extends TestCase
     }
 
     /**
-     * @covers \He110\CommunicationTools\Telegram\MessengerEvents::onButtonClick()
-     * @covers \He110\CommunicationTools\Telegram\MessengerEvents::getRequest()
-     * @covers \He110\CommunicationTools\Telegram\MessengerEvents::checkEvents()
-     * @covers \He110\CommunicationTools\Telegram\MessengerEvents::addEvent()
-     * @covers \He110\CommunicationTools\Telegram\MessengerEvents::detectPayloadType()
-     * @covers \He110\CommunicationTools\Telegram\MessengerEvents::setUserFromRequest()
-     * @covers \He110\CommunicationTools\Telegram\MessengerEvents::buildButtonClickRequest()
+     * @covers \He110\CommunicationTools\Telegram\TelegramMessengerEvents::onButtonClick()
+     * @covers \He110\CommunicationTools\Telegram\TelegramMessengerEvents::getRequest()
+     * @covers \He110\CommunicationTools\Telegram\TelegramMessengerEvents::checkEvents()
+     * @covers \He110\CommunicationTools\Telegram\TelegramMessengerEvents::addEvent()
+     * @covers \He110\CommunicationTools\Telegram\TelegramMessengerEvents::detectPayloadType()
+     * @covers \He110\CommunicationTools\Telegram\TelegramMessengerEvents::setUserFromRequest()
+     * @covers \He110\CommunicationTools\Telegram\TelegramMessengerEvents::buildButtonClickRequest()
      */
     public function testOnButtonClick()
     {
         $var = "before";
 
-        $client = new MessengerDoubler();
-        $client->setAccessToken(MessengerTest::API_KEY);
-        $client->setTargetUser(MessengerTest::TARGET_USER);
+        $client = new TelegramMessengerDoubler();
+        $client->setAccessToken(TelegramMessengerTest::API_KEY);
+        $client->setTargetUser(TelegramMessengerTest::TARGET_USER);
         $client->setDataForInput($this->getTelegramRequestMockForCallback());
         $client->onButtonClick(function($request) use (&$var) {
             /** @var Request $request */
@@ -121,7 +121,7 @@ class MessengerEventsTest extends TestCase
         $updateId = rand(0, 500);
         $messageId = rand(0, 500);
         $from = $this->from;
-        $targetUser = MessengerTest::TARGET_USER;
+        $targetUser = TelegramMessengerTest::TARGET_USER;
         $time = time();
         $text = addslashes($text);
 
@@ -161,7 +161,7 @@ AOL;
         $updateId = rand(0, 500);
         $messageId = rand(0, 500);
         $from = $this->from;
-        $targetUser = MessengerTest::TARGET_USER;
+        $targetUser = TelegramMessengerTest::TARGET_USER;
         $time = time();
         $callback = addslashes($callback);
 
@@ -234,9 +234,9 @@ AOL;
     
     public function setUp(): void
     {
-        $this->client = new Messenger();
-        $this->client->setAccessToken(MessengerTest::API_KEY);
-        $this->client->setTargetUser(MessengerTest::TARGET_USER);
+        $this->client = new TelegramMessenger();
+        $this->client->setAccessToken(TelegramMessengerTest::API_KEY);
+        $this->client->setTargetUser(TelegramMessengerTest::TARGET_USER);
     }
 
     public function tearDown(): void

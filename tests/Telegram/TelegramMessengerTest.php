@@ -13,12 +13,12 @@ use He110\CommunicationTools\Exceptions\AttachmentNotFoundException;
 use He110\CommunicationTools\Exceptions\TargetUserException;
 use He110\CommunicationTools\MessengerScreen;
 use He110\CommunicationTools\ScreenItems\Button;
-use He110\CommunicationTools\Telegram\Messenger;
+use He110\CommunicationTools\Telegram\TelegramMessenger;
 use He110\CommunicationToolsTests\ScreenItems\FileTest;
 use He110\CommunicationToolsTests\ScreenItems\VoiceTest;
 use PHPUnit\Framework\TestCase;
 
-class MessengerTest extends TestCase
+class TelegramMessengerTest extends TestCase
 {
     /** @var string  */
     const API_KEY = "895440583:AAFMQ2yQrTH3JMgrCZ_fsCmrLhlgaCAQpeQ";
@@ -26,17 +26,17 @@ class MessengerTest extends TestCase
     /** @var int */
     const TARGET_USER = 62847152;
 
-    /** @var Messenger */
+    /** @var TelegramMessenger */
     private $client;
 
     /**
-     * @covers \He110\CommunicationTools\Telegram\Messenger::sendMessage()
-     * @covers \He110\CommunicationTools\Telegram\Messenger::checkRequirements()
-     * @covers \He110\CommunicationTools\Telegram\Messenger::setTargetUser()
-     * @covers \He110\CommunicationTools\Telegram\Messenger::getTargetUser()
-     * @covers \He110\CommunicationTools\Telegram\Messenger::generateButtonMarkup()
-     * @covers \He110\CommunicationTools\Telegram\Messenger::buttonToArray()
-     * @covers \He110\CommunicationTools\Telegram\Messenger::checkRequestResult()
+     * @covers \He110\CommunicationTools\Telegram\TelegramMessenger::sendMessage()
+     * @covers \He110\CommunicationTools\Telegram\TelegramMessenger::checkRequirements()
+     * @covers \He110\CommunicationTools\Telegram\TelegramMessenger::setTargetUser()
+     * @covers \He110\CommunicationTools\Telegram\TelegramMessenger::getTargetUser()
+     * @covers \He110\CommunicationTools\Telegram\TelegramMessenger::generateButtonMarkup()
+     * @covers \He110\CommunicationTools\Telegram\TelegramMessenger::buttonToArray()
+     * @covers \He110\CommunicationTools\Telegram\TelegramMessenger::checkRequestResult()
      */
     public function testSendMessage()
     {
@@ -55,8 +55,8 @@ class MessengerTest extends TestCase
     }
 
     /**
-     * @covers \He110\CommunicationTools\Telegram\Messenger::checkRequirements()
-     * @covers \He110\CommunicationTools\Telegram\Messenger::setAccessToken()
+     * @covers \He110\CommunicationTools\Telegram\TelegramMessenger::checkRequirements()
+     * @covers \He110\CommunicationTools\Telegram\TelegramMessenger::setAccessToken()
      */
     public function testCheckRequirements()
     {
@@ -66,9 +66,9 @@ class MessengerTest extends TestCase
     }
 
     /**
-     * @covers \He110\CommunicationTools\Telegram\Messenger::sendScreen()
-     * @covers \He110\CommunicationTools\Telegram\Messenger::workWithScreenItem()
-     * @covers \He110\CommunicationTools\Telegram\Messenger::sendScreenHelper()
+     * @covers \He110\CommunicationTools\Telegram\TelegramMessenger::sendScreen()
+     * @covers \He110\CommunicationTools\Telegram\TelegramMessenger::workWithScreenItem()
+     * @covers \He110\CommunicationTools\Telegram\TelegramMessenger::sendScreenHelper()
      */
     public function testSendScreen()
     {
@@ -83,10 +83,10 @@ class MessengerTest extends TestCase
     }
 
     /**
-     * @covers \He110\CommunicationTools\Telegram\Messenger::sendVoice()
-     * @covers \He110\CommunicationTools\Telegram\Messenger::checkRequirements()
-     * @covers \He110\CommunicationTools\Telegram\Messenger::checkRequestResult()
-     * @covers \He110\CommunicationTools\Telegram\Messenger::prepareFile()
+     * @covers \He110\CommunicationTools\Telegram\TelegramMessenger::sendVoice()
+     * @covers \He110\CommunicationTools\Telegram\TelegramMessenger::checkRequirements()
+     * @covers \He110\CommunicationTools\Telegram\TelegramMessenger::checkRequestResult()
+     * @covers \He110\CommunicationTools\Telegram\TelegramMessenger::prepareFile()
      */
     public function testSendVoice()
     {
@@ -107,8 +107,8 @@ class MessengerTest extends TestCase
     }
 
     /**
-     * @covers \He110\CommunicationTools\Telegram\Messenger::setAccessToken()
-     * @covers \He110\CommunicationTools\Telegram\Messenger::getAccessToken()
+     * @covers \He110\CommunicationTools\Telegram\TelegramMessenger::setAccessToken()
+     * @covers \He110\CommunicationTools\Telegram\TelegramMessenger::getAccessToken()
      */
     public function testSetAccessToken()
     {
@@ -120,13 +120,13 @@ class MessengerTest extends TestCase
     }
 
     /**
-     * @covers \He110\CommunicationTools\Telegram\Messenger::sendImage()
-     * @covers \He110\CommunicationTools\Telegram\Messenger::checkRequirements()
-     * @covers \He110\CommunicationTools\Telegram\Messenger::checkRequestResult()
-     * @covers \He110\CommunicationTools\Telegram\Messenger::prepareFile()
-     * @covers \He110\CommunicationTools\Telegram\Messenger::generateButtonMarkup()
-     * @covers \He110\CommunicationTools\Telegram\Messenger::buttonToArray()
-     * @covers \He110\CommunicationTools\Telegram\Messenger::workWithAttachment()
+     * @covers \He110\CommunicationTools\Telegram\TelegramMessenger::sendImage()
+     * @covers \He110\CommunicationTools\Telegram\TelegramMessenger::checkRequirements()
+     * @covers \He110\CommunicationTools\Telegram\TelegramMessenger::checkRequestResult()
+     * @covers \He110\CommunicationTools\Telegram\TelegramMessenger::prepareFile()
+     * @covers \He110\CommunicationTools\Telegram\TelegramMessenger::generateButtonMarkup()
+     * @covers \He110\CommunicationTools\Telegram\TelegramMessenger::buttonToArray()
+     * @covers \He110\CommunicationTools\Telegram\TelegramMessenger::workWithAttachment()
      */
     public function testSendImage()
     {
@@ -149,13 +149,13 @@ class MessengerTest extends TestCase
     }
 
     /**
-     * @covers \He110\CommunicationTools\Telegram\Messenger::sendDocument()
-     * @covers \He110\CommunicationTools\Telegram\Messenger::checkRequirements()
-     * @covers \He110\CommunicationTools\Telegram\Messenger::checkRequestResult()
-     * @covers \He110\CommunicationTools\Telegram\Messenger::prepareFile()
-     * @covers \He110\CommunicationTools\Telegram\Messenger::generateButtonMarkup()
-     * @covers \He110\CommunicationTools\Telegram\Messenger::buttonToArray()
-     * @covers \He110\CommunicationTools\Telegram\Messenger::workWithAttachment()
+     * @covers \He110\CommunicationTools\Telegram\TelegramMessenger::sendDocument()
+     * @covers \He110\CommunicationTools\Telegram\TelegramMessenger::checkRequirements()
+     * @covers \He110\CommunicationTools\Telegram\TelegramMessenger::checkRequestResult()
+     * @covers \He110\CommunicationTools\Telegram\TelegramMessenger::prepareFile()
+     * @covers \He110\CommunicationTools\Telegram\TelegramMessenger::generateButtonMarkup()
+     * @covers \He110\CommunicationTools\Telegram\TelegramMessenger::buttonToArray()
+     * @covers \He110\CommunicationTools\Telegram\TelegramMessenger::workWithAttachment()
      */
     public function testSendDocument()
     {
@@ -180,7 +180,7 @@ class MessengerTest extends TestCase
     /**
      * @return array
      */
-    public function generateButtons(): array
+    public static function generateButtons(): array
     {
         return [
             Button::create([
@@ -202,7 +202,7 @@ class MessengerTest extends TestCase
 
     public function setUp(): void
     {
-        $this->client = new Messenger();
+        $this->client = new TelegramMessenger();
         $this->client->setAccessToken(static::API_KEY);
         $this->client->setTargetUser(static::TARGET_USER);
     }

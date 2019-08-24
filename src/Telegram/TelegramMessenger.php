@@ -22,7 +22,7 @@ use He110\CommunicationTools\ScreenItems\Voice;
 use TelegramBot\Api\BotApi;
 use TelegramBot\Api\Types\Message;
 
-class Messenger extends MessengerEvents implements MessengerInterface, MessengerWithTokenInterface
+class TelegramMessenger extends TelegramMessengerEvents implements MessengerInterface, MessengerWithTokenInterface
 {
     /** @var BotApi */
     private $client = null;
@@ -311,6 +311,9 @@ class Messenger extends MessengerEvents implements MessengerInterface, Messenger
      * @param $result
      * @param $buttons
      * @return array
+     * @throws AccessTokenException
+     * @throws AttachmentNotFoundException
+     * @throws TargetUserException
      */
     private function sendScreenHelper($current, $item, $result, $buttons): array
     {

@@ -9,16 +9,16 @@
 namespace He110\CommunicationToolsTests\Telegram;
 
 
-use He110\CommunicationTools\Telegram\Messenger;
+use He110\CommunicationTools\Telegram\TelegramMessenger;
 
-class MessengerDoubler extends Messenger
+class TelegramMessengerDoubler extends TelegramMessenger
 {
     /** @var string */
     private $data;
 
     /**
      * @param string $data
-     * @return MessengerDoubler
+     * @return TelegramMessengerDoubler
      */
     public function setDataForInput(string $data): self
     {

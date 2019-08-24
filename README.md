@@ -19,10 +19,10 @@ $ composer require he110/communication-tools
 <?php
 
 // Telegram client's taken as an example. You can use other
-use He110\CommunicationTools\Telegram\Messenger;
+use He110\CommunicationTools\Telegram\TelegramMessenger;
 use He110\CommunicationTools\MessengerScreen;
 
-$messenger = new Messenger();
+$messenger = new TelegramMessenger();
 $messenger->setAccessToken(YOUR_TOKEN_HERE);
 
 // If you want, to send simple text message
@@ -50,10 +50,10 @@ $messenger->sendScreen($screen);
 
 // Telegram client's taken as an example. You can use other
 use He110\CommunicationTools\MessengerPool;
-use He110\CommunicationTools\Telegram\Messenger;
+use He110\CommunicationTools\Telegram\TelegramMessenger;
 use He110\CommunicationTools\MessengerScreen;
 
-$messenger = new Messenger();
+$messenger = new TelegramMessenger();
 $messenger->setAccessToken(YOUR_TOKEN_HERE);
 
 // Pool allows you to use multiple messengers as one
@@ -77,11 +77,11 @@ $pool->sendScreen($screen);
 <?php
 
 // Telegram client's taken as an example. You can use other
-use He110\CommunicationTools\Telegram\Messenger;
+use He110\CommunicationTools\Telegram\TelegramMessenger;
 use He110\CommunicationTools\Request;
 use He110\CommunicationTools\MessengerUser;
 
-$messenger = new Messenger();
+$messenger = new TelegramMessenger();
 $messenger->setAccessToken(YOUR_TOKEN_HERE);
 
 // Action for simple incoming messages

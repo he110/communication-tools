@@ -15,7 +15,7 @@ use He110\CommunicationTools\MessengerUser;
 use He110\CommunicationTools\Request;
 use He110\CommunicationTools\ScreenItems\Button;
 
-class MessengerEvents implements MessengerEventsInterface
+class TelegramMessengerEvents implements MessengerEventsInterface
 {
     /**
      * {@inheritdoc}
