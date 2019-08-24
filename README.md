@@ -9,7 +9,6 @@ Tools set for messenger managing. Allows you to send any content via Telegram, V
 Install the latest version with
 
 ```bash
-// Not published on Packagist yet
 $ composer require he110/communication-tools
 ```
 
@@ -69,6 +68,40 @@ $screen->addMessage("Your message text here");
 $screen->addButtonText("Text button");
 $screen->addButtonLink("URL button", "https://google.com");
 $pool->sendScreen($screen);
+
+```
+
+
+### Work with events
+```php
+<?php
+
+// Telegram client's taken as an example. You can use other
+use He110\CommunicationTools\Telegram\Messenger;
+use He110\CommunicationTools\Request;
+use He110\CommunicationTools\MessengerUser;
+
+$messenger = new Messenger();
+$messenger->setAccessToken(YOUR_TOKEN_HERE);
+
+// Action for simple incoming messages
+$messenger->onMessage(function(Request $request) use ($messenger) {
+    // Your code here...
+    $text = $request->getMessage();
+    /** @var MessengerUser $user $user */
+    $user = $request->getUser();
+    $messenger->setTargetUser($user->getUserId());
+    $messenger->sendMessage("We've got your message: '$text'");
+});
+
+// Action for buttons click
+$messenger->onButtonClick(function(Request $request) use ($messenger) {
+     // Your code here...
+     $payload = $request->getPayload();
+});
+
+// Required!!! Run this method to check if events are triggered
+$messenger->checkEvents();
 
 ```
 
