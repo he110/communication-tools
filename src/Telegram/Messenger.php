@@ -182,22 +182,26 @@ class Messenger extends MessengerEvents implements MessengerInterface, Messenger
         return $result;
     }
 
+    /**
+     * @param ScreenItemInterface $item
+     * @param array $buttons
+     * @return bool
+     * @throws AccessTokenException
+     * @throws AttachmentNotFoundException
+     * @throws TargetUserException
+     */
     private function workWithScreenItem(ScreenItemInterface $item, array $buttons = []): bool
     {
         $class = get_class($item);
         switch ($class) {
             case \He110\CommunicationTools\ScreenItems\Message::class:
                 return $this->sendMessage($item->getText(), $buttons);
-                break;
-            case File::class:
-                $method = $item->getType() == File::FILE_TYPE_IMAGE ? "sendImage" : "sendDocument";
-                return $this->{$method}($item->getPath(), $item->getDescription());
-                break;
             case Voice::class:
                 return $this->sendVoice($item->getPath());
-                break;
+            default:
+                $method = $item->getType() == File::FILE_TYPE_IMAGE ? "sendImage" : "sendDocument";
+                return $this->{$method}($item->getPath(), $item->getDescription());
         }
-        return false;
     }
 
     /**

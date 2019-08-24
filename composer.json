@@ -14,7 +14,8 @@
   ],
   "require": {
     "php": ">=7.2",
-    "telegram-bot/api": "^2.3"
+    "telegram-bot/api": "^2.3",
+    "ext-curl": "^7.2"
   },
   "require-dev": {
     "phpunit/phpunit": "^8"
