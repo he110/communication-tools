@@ -15,6 +15,7 @@ use He110\CommunicationTools\MessengerInterface;
 use He110\CommunicationTools\MessengerScreen;
 use He110\CommunicationTools\MessengerWithTokenInterface;
 use He110\CommunicationTools\ScreenItems\Button;
+use He110\CommunicationTools\ScreenItems\File;
 use Viber\Api\Keyboard;
 use Viber\Api\Message\Text;
 use Viber\Api\Response;
@@ -78,20 +79,20 @@ class ViberMessenger implements MessengerInterface, MessengerWithTokenInterface
     /**
      * {@inheritdoc}
      *
-     * @param string $pathToFile
+     * @param string $fileUrl
      * @param string|null $description
      * @param array $buttons
      * @return bool
      * @throws AccessTokenException
      * @throws TargetUserException
      */
-    public function sendImage(string $pathToFile, string $description = null, array $buttons = []): bool
+    public function sendImage(string $fileUrl, string $description = null, array $buttons = []): bool
     {
         $this->checkRequirements();
         try {
             $message = (new \Viber\Api\Message\Picture())
                 ->setReceiver($this->getTargetUser())
-                ->setMedia($pathToFile) //TODO Придумать, как преобразовать в URL
+                ->setMedia($fileUrl)
                 ->setText($description);
 
             if (!empty($buttons))
@@ -109,20 +110,24 @@ class ViberMessenger implements MessengerInterface, MessengerWithTokenInterface
     /**
      * {@inheritdoc}
      *
-     * @param string $pathToFile
+     * @param string $fileUrl
      * @param string|null $description
      * @param array $buttons
      * @return bool
      * @throws AccessTokenException
      * @throws TargetUserException
+     * @throws \He110\CommunicationTools\Exceptions\AttachmentNotFoundException
      */
-    public function sendDocument(string $pathToFile, string $description = null, array $buttons = []): bool
+    public function sendDocument(string $fileUrl, string $description = null, array $buttons = []): bool
     {
         $this->checkRequirements();
+        $file = (new File())->setUrlPath($fileUrl);
         try {
             $message = (new \Viber\Api\Message\File())
                 ->setReceiver($this->getTargetUser())
-                ->setMedia($pathToFile); //TODO Придумать, как преобразовать в URL
+                ->setSize($file->getSize())
+                ->setFileName($file->getName())
+                ->setMedia($fileUrl);
 
             if (!empty($buttons))
                 $message->setKeyboard($this->createViberKeyboard($buttons));

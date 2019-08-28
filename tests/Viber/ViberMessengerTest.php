@@ -8,8 +8,10 @@
 
 namespace He110\CommunicationToolsTests\Viber;
 
+use He110\CommunicationTools\Exceptions\AttachmentNotFoundException;
 use He110\CommunicationTools\Exceptions\TargetUserException;
 use He110\CommunicationTools\Viber\ViberMessenger;
+use He110\CommunicationToolsTests\ScreenItems\FileTest;
 use He110\CommunicationToolsTests\Telegram\TelegramMessengerTest;
 use PHPUnit\Framework\TestCase;
 
@@ -68,6 +70,58 @@ class ViberMessengerTest extends TestCase
         $this->assertEquals($this->apiKey, $this->client->getAccessToken());
         $this->client->setAccessToken(__METHOD__);
         $this->assertEquals(__METHOD__, $this->client->getAccessToken());
+    }
+
+    /**
+     * @covers \He110\CommunicationTools\Viber\ViberMessenger::sendImage
+     * @covers \He110\CommunicationTools\Viber\ViberMessenger::checkRequirements
+     * @covers \He110\CommunicationTools\Viber\ViberMessenger::checkRequestResult
+     * @covers \He110\CommunicationTools\Viber\ViberMessenger::convertButton
+     */
+    public function testSendImage()
+    {
+        $this->assertTrue($this->client->sendImage(FileTest::IMAGE_URL));
+        $this->assertTrue($this->client->sendImage(FileTest::IMAGE_URL, __METHOD__));
+        $this->assertTrue($this->client->sendImage(FileTest::IMAGE_URL, __METHOD__, TelegramMessengerTest::generateButtons()));
+
+        try {
+            $this->client->sendImage("incorrect_url");
+        } catch (\Exception $e) {
+            $this->assertEquals(AttachmentNotFoundException::class, get_class($e));
+        }
+
+        $this->client->setTargetUser("123456");
+        $this->assertFalse($this->client->sendImage(FileTest::IMAGE_URL));
+
+        $this->client->setTargetUser(null);
+        $this->expectException(TargetUserException::class);
+        $this->client->sendImage(FileTest::IMAGE_URL);
+    }
+
+    /**
+     * @covers \He110\CommunicationTools\Viber\ViberMessenger::sendDocument
+     * @covers \He110\CommunicationTools\Viber\ViberMessenger::checkRequirements
+     * @covers \He110\CommunicationTools\Viber\ViberMessenger::checkRequestResult
+     * @covers \He110\CommunicationTools\Viber\ViberMessenger::convertButton
+     */
+    public function testSendDocument()
+    {
+        $this->assertTrue($this->client->sendDocument(FileTest::DOCUMENT_URL));
+        $this->assertTrue($this->client->sendDocument(FileTest::IMAGE_URL, __METHOD__));
+        $this->assertTrue($this->client->sendDocument(FileTest::IMAGE_URL, __METHOD__, TelegramMessengerTest::generateButtons()));
+
+        try {
+            $this->client->sendDocument("invalid_url");
+        } catch (\Exception $e) {
+            $this->assertEquals(AttachmentNotFoundException::class, get_class($e));
+        }
+
+        $this->client->setTargetUser("123456");
+        $this->assertFalse($this->client->sendDocument(FileTest::IMAGE_URL));
+
+        $this->client->setTargetUser(null);
+        $this->expectException(TargetUserException::class);
+        $this->client->sendDocument(FileTest::IMAGE_URL);
     }
 
     public function setUp(): void

@@ -98,15 +98,16 @@ class File implements ScreenItemInterface
 
     /**
      * @param string $url
-     * @return string|null
+     * @return string
+     * @throws AttachmentNotFoundException
      */
-    private function parseFileName(string $url): ?string
+    private function parseFileName(string $url): string
     {
         $fileName = [];
         preg_match('/[^\/\&\?]+\.\w{3,4}(?=([\?&].*$|$))/m', $url, $fileName);
         if (isset($fileName[0]))
             return $fileName[0];
-        return null;
+        throw new AttachmentNotFoundException("File name cannot be parsed");
     }
 
     /**
