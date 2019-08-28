@@ -75,16 +75,16 @@ class MessengerScreen
     }
 
     /**
-     * @param string $pathToFile
+     * @param string $fileUrl
      * @param string $description
      * @return MessengerScreen
      * @throws AttachmentNotFoundException
      */
-    public function addImage(string $pathToFile, string $description = ""): self
+    public function addImage(string $fileUrl, string $description = ""): self
     {
-        $this->checkFile($pathToFile);
+        $this->checkFile($fileUrl);
         $file = File::create([
-            "path" => $pathToFile,
+            "path" => $fileUrl,
             "description" => $description,
             "type" => File::FILE_TYPE_IMAGE
         ]);
@@ -93,16 +93,16 @@ class MessengerScreen
     }
 
     /**
-     * @param string $pathToFile
+     * @param string $fileUrl
      * @param string $description
      * @return MessengerScreen
      * @throws AttachmentNotFoundException
      */
-    public function addDocument(string $pathToFile, string $description = ""): self
+    public function addDocument(string $fileUrl, string $description = ""): self
     {
-        $this->checkFile($pathToFile);
+        $this->checkFile($fileUrl);
         $file = File::create([
-            "path" => $pathToFile,
+            "path" => $fileUrl,
             "description" => $description,
             "type" => File::FILE_TYPE_DOCUMENT
         ]);
@@ -148,13 +148,25 @@ class MessengerScreen
     }
 
     /**
-     * @param string $pathToFile
+     * @param string $filePath - It can be static path to file or url
      * @throws AttachmentNotFoundException
      */
-    private function checkFile(string $pathToFile): void
+    private function checkFile(string $filePath): void
     {
-        if (!file_exists($pathToFile))
+        if (file_exists($filePath))
+            return;
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $filePath);
+        curl_setopt($ch, CURLOPT_NOBODY, 1);
+        curl_setopt($ch, CURLOPT_FAILONERROR, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+        $result = curl_exec($ch);
+        curl_close($ch);
+        if ($result === FALSE) {
             throw new AttachmentNotFoundException("File not found");
+        }
     }
 
     /**

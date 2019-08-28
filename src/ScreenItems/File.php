@@ -9,6 +9,8 @@
 namespace He110\CommunicationTools\ScreenItems;
 
 
+use He110\CommunicationTools\Exceptions\AttachmentNotFoundException;
+
 class File implements ScreenItemInterface
 {
     const FILE_TYPE_IMAGE = "image";
@@ -52,6 +54,59 @@ class File implements ScreenItemInterface
         }
         $this->path = $path;
         return $this;
+    }
+
+    /**
+     * @param string $urlPath
+     * @return File
+     * @throws AttachmentNotFoundException
+     */
+    public function setUrlPath(string $urlPath): self
+    {
+        $path = $this->downloadFile($urlPath);
+        $this->setPath($path);
+        $this->path = $urlPath;
+        unlink($path);
+        return $this;
+    }
+
+    /**
+     * @param string $from
+     * @return string
+     * @throws AttachmentNotFoundException
+     */
+    private function downloadFile(string $from): string
+    {
+        $saveName = $this->parseFileName($from);
+        $fp = fopen($saveName, 'w+');
+        if($fp === false){
+            throw new AttachmentNotFoundException("Attachment can't be downloaded from url. Url is invalid");
+        }
+        $ch = curl_init($from);
+        curl_setopt($ch, CURLOPT_FILE, $fp);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 20);
+        curl_exec($ch);
+        $statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        fclose($fp);
+        if($statusCode == 200){
+            return $saveName;
+        } else{
+            throw new AttachmentNotFoundException("Attachment can't be downloaded from url. Status from web: $statusCode");
+        }
+    }
+
+    /**
+     * @param string $url
+     * @return string|null
+     */
+    private function parseFileName(string $url): ?string
+    {
+        $fileName = [];
+        preg_match('/[^\/\&\?]+\.\w{3,4}(?=([\?&].*$|$))/m', $url, $fileName);
+        if (isset($fileName[0]))
+            return $fileName[0];
+        return null;
     }
 
     /**
@@ -141,7 +196,7 @@ class File implements ScreenItemInterface
     public function fromArray(array $data)
     {
         if (isset($data["path"]))
-            $this->setPath($data["path"]);
+            $this->setUrlPath($data["path"]);
         foreach($data as $key=>$value) {
             $methodName = "set".ucfirst($key);
             if (method_exists($this, $methodName) && is_callable([$this, $methodName]))
@@ -167,10 +222,10 @@ class File implements ScreenItemInterface
     }
 
     /**
-     * @param $path
+     * @param string $path
      * @return bool
      */
-    private function isImage($path): bool
+    private function isImage(string $path): bool
     {
         $a = getimagesize($path);
         $imageType = $a[2];

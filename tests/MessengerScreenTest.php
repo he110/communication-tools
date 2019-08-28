@@ -31,10 +31,10 @@ class MessengerScreenTest extends TestCase
     public function testAddDocument()
     {
         $this->assertEmpty($this->screen->getContent());
-        $this->screen->addDocument(FileTest::DOCUMENT_PATH, static::DESCRIPTION);
+        $this->screen->addDocument(FileTest::DOCUMENT_URL, static::DESCRIPTION);
         $this->assertCount(1, $this->screen->getContent());
         list($ob) = $this->screen->getContent();
-        $this->assertEquals(FileTest::DOCUMENT_PATH, $ob["path"]);
+        $this->assertEquals(FileTest::DOCUMENT_URL, $ob["path"]);
         $this->assertEquals(static::DESCRIPTION, $ob["description"]);
         $this->screen->resetContent();
         $this->assertEmpty($this->screen->getContent());
@@ -69,10 +69,10 @@ class MessengerScreenTest extends TestCase
     public function testAddImage()
     {
         $this->assertEmpty($this->screen->getContent());
-        $this->screen->addImage(FileTest::IMAGE_PATH);
+        $this->screen->addImage(FileTest::IMAGE_URL);
         $this->assertCount(1, $this->screen->getContent());
         list($ob) = $this->screen->getContent();
-        $this->assertEquals(FileTest::IMAGE_PATH, $ob["path"]);
+        $this->assertEquals(FileTest::IMAGE_URL, $ob["path"]);
         $this->screen->resetContent();
         $this->assertEmpty($this->screen->getContent());
 

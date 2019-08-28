@@ -29,9 +29,6 @@ class TelegramMessengerTest extends TestCase
     /** @var TelegramMessenger */
     private $client;
 
-    /** @var string */
-    public static $imageUrl = "https://pm1.narvii.com/6958/8caff7ac87a301e39d22a40b82ff03943d32e54dr1-900-720v2_128.jpg";
-
     /**
      * @covers \He110\CommunicationTools\Telegram\TelegramMessenger::sendMessage()
      * @covers \He110\CommunicationTools\Telegram\TelegramMessenger::checkRequirements()
@@ -79,7 +76,7 @@ class TelegramMessengerTest extends TestCase
         $screen->addMessage(__METHOD__);
         $screen->addButtonLink("Author", "https://zobenko.ru");
         $screen->addButtonText("Hello, world");
-        $screen->addImage(FileTest::IMAGE_PATH, "Description");
+        $screen->addImage(FileTest::IMAGE_URL, "Description");
         $screen->addVoice(VoiceTest::VOICE_WAV);
 
         $this->assertTrue($this->client->sendScreen($screen));
@@ -133,9 +130,9 @@ class TelegramMessengerTest extends TestCase
      */
     public function testSendImage()
     {
-        $this->assertTrue($this->client->sendImage(static::$imageUrl));
-        $this->assertTrue($this->client->sendImage(static::$imageUrl, __METHOD__));
-        $this->assertTrue($this->client->sendImage(static::$imageUrl, __METHOD__, $this->generateButtons()));
+        $this->assertTrue($this->client->sendImage(FileTest::IMAGE_URL));
+        $this->assertTrue($this->client->sendImage(FileTest::IMAGE_URL, __METHOD__));
+        $this->assertTrue($this->client->sendImage(FileTest::IMAGE_URL, __METHOD__, $this->generateButtons()));
 
         try {
             $this->client->sendImage("incorrect_url");
@@ -144,11 +141,11 @@ class TelegramMessengerTest extends TestCase
         }
 
         $this->client->setTargetUser("123456");
-        $this->assertFalse($this->client->sendImage(static::$imageUrl));
+        $this->assertFalse($this->client->sendImage(FileTest::IMAGE_URL));
 
         $this->client->setTargetUser(null);
         $this->expectException(TargetUserException::class);
-        $this->client->sendImage(static::$imageUrl);
+        $this->client->sendImage(FileTest::IMAGE_URL);
     }
 
     /**
@@ -162,9 +159,9 @@ class TelegramMessengerTest extends TestCase
      */
     public function testSendDocument()
     {
-        $this->assertTrue($this->client->sendDocument(static::$imageUrl));
-        $this->assertTrue($this->client->sendDocument(static::$imageUrl, __METHOD__));
-        $this->assertTrue($this->client->sendDocument(static::$imageUrl, __METHOD__, $this->generateButtons()));
+        $this->assertTrue($this->client->sendDocument(FileTest::IMAGE_URL));
+        $this->assertTrue($this->client->sendDocument(FileTest::IMAGE_URL, __METHOD__));
+        $this->assertTrue($this->client->sendDocument(FileTest::IMAGE_URL, __METHOD__, $this->generateButtons()));
 
         try {
             $this->client->sendDocument("invalid_url");
@@ -173,11 +170,11 @@ class TelegramMessengerTest extends TestCase
         }
 
         $this->client->setTargetUser("123456");
-        $this->assertFalse($this->client->sendDocument(static::$imageUrl));
+        $this->assertFalse($this->client->sendDocument(FileTest::IMAGE_URL));
 
         $this->client->setTargetUser(null);
         $this->expectException(TargetUserException::class);
-        $this->client->sendDocument(static::$imageUrl);
+        $this->client->sendDocument(FileTest::IMAGE_URL);
     }
 
     /**

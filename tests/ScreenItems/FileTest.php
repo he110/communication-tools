@@ -17,14 +17,17 @@ class FileTest extends TestCase
     private $file;
 
     /** @var string  */
-    const IMAGE_PATH = __DIR__."/../Assets/image.jpg";
+    const IMAGE_URL = "https://sample-videos.com/img/Sample-jpg-image-50kb.jpg";
 
     /** @var string  */
-    const DOCUMENT_PATH = __DIR__."/../Assets/document.txt";
+    const DOCUMENT_URL = "https://www.w3.org/TR/PNG/iso_8859-1.txt";
 
     /**
      * @covers \He110\CommunicationTools\ScreenItems\File::setType()
      * @covers \He110\CommunicationTools\ScreenItems\File::setPath()
+     * @covers \He110\CommunicationTools\ScreenItems\File::setUrlPath()
+     * @covers \He110\CommunicationTools\ScreenItems\File::parseFileName()
+     * @covers \He110\CommunicationTools\ScreenItems\File::downloadFile()
      * @covers \He110\CommunicationTools\ScreenItems\File::setName()
      * @covers \He110\CommunicationTools\ScreenItems\File::setSize()
      * @covers \He110\CommunicationTools\ScreenItems\File::getPath()
@@ -33,9 +36,9 @@ class FileTest extends TestCase
      */
     public function testSetPath()
     {
-        $this->file->setPath(static::IMAGE_PATH);
-        $this->assertEquals(static::IMAGE_PATH, $this->file->getPath());
-        $this->assertEquals("image.jpg", $this->file->getName());
+        $this->file->setUrlPath(static::IMAGE_URL);
+        $this->assertEquals(static::IMAGE_URL, $this->file->getPath());
+        $this->assertEquals("Sample-jpg-image-50kb.jpg", $this->file->getName());
         $this->assertEquals(File::FILE_TYPE_IMAGE, $this->file->getType());
     }
 
@@ -46,7 +49,7 @@ class FileTest extends TestCase
     public function testToArray()
     {
         $conf = [
-            "path" => static::IMAGE_PATH,
+            "path" => static::IMAGE_URL,
             "name" => __METHOD__
         ];
         $this->file->fromArray($conf);
@@ -83,11 +86,11 @@ class FileTest extends TestCase
      */
     public function testCreate()
     {
-        $ob = File::create(["path" => static::IMAGE_PATH, "name" => __METHOD__]);
+        $ob = File::create(["path" => static::IMAGE_URL, "name" => __METHOD__]);
         $this->assertNotEquals($this->file, $ob);
         $this->assertEquals(File::class, get_class($ob));
         $this->assertEquals(__METHOD__, $ob->getName());
-        $this->assertEquals(static::IMAGE_PATH, $ob->getPath());
+        $this->assertEquals(static::IMAGE_URL, $ob->getPath());
     }
 
     /**
@@ -109,7 +112,7 @@ class FileTest extends TestCase
      */
     public function testGetSize(string $file, int $size, string $type)
     {
-        $this->file->setPath($file);
+        $this->file->setUrlPath($file);
         $this->assertEquals($size, $this->file->getSize());
         $this->assertEquals($type, $this->file->getType());
     }
@@ -120,8 +123,8 @@ class FileTest extends TestCase
     public function getSizeProvider(): array
     {
         return array(
-            array(static::IMAGE_PATH, 39481, File::FILE_TYPE_IMAGE),
-            array(static::DOCUMENT_PATH, 12, File::FILE_TYPE_DOCUMENT)
+            array(static::IMAGE_URL, 51085, File::FILE_TYPE_IMAGE),
+            array(static::DOCUMENT_URL, 6121, File::FILE_TYPE_DOCUMENT)
         );
     }
 
