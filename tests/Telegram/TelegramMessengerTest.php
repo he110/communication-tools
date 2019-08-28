@@ -29,6 +29,9 @@ class TelegramMessengerTest extends TestCase
     /** @var TelegramMessenger */
     private $client;
 
+    /** @var string */
+    public static $imageUrl = "https://pm1.narvii.com/6958/8caff7ac87a301e39d22a40b82ff03943d32e54dr1-900-720v2_128.jpg";
+
     /**
      * @covers \He110\CommunicationTools\Telegram\TelegramMessenger::sendMessage()
      * @covers \He110\CommunicationTools\Telegram\TelegramMessenger::checkRequirements()
@@ -130,22 +133,22 @@ class TelegramMessengerTest extends TestCase
      */
     public function testSendImage()
     {
-        $this->assertTrue($this->client->sendImage(__DIR__."/../Assets/image.jpg"));
-        $this->assertTrue($this->client->sendImage(__DIR__."/../Assets/image.jpg", __METHOD__));
-        $this->assertTrue($this->client->sendImage(__DIR__."/../Assets/image.jpg", __METHOD__, $this->generateButtons()));
+        $this->assertTrue($this->client->sendImage(static::$imageUrl));
+        $this->assertTrue($this->client->sendImage(static::$imageUrl, __METHOD__));
+        $this->assertTrue($this->client->sendImage(static::$imageUrl, __METHOD__, $this->generateButtons()));
 
         try {
-            $this->client->sendImage(__DIR__ . "/../Assets/not_existed.jpg");
+            $this->client->sendImage("incorrect_url");
         } catch (\Exception $e) {
             $this->assertEquals(AttachmentNotFoundException::class, get_class($e));
         }
 
         $this->client->setTargetUser("123456");
-        $this->assertFalse($this->client->sendImage(__DIR__."/../Assets/image.jpg"));
+        $this->assertFalse($this->client->sendImage(static::$imageUrl));
 
         $this->client->setTargetUser(null);
         $this->expectException(TargetUserException::class);
-        $this->client->sendImage(__DIR__."/../Assets/image.jpg");
+        $this->client->sendImage(static::$imageUrl);
     }
 
     /**
@@ -159,22 +162,22 @@ class TelegramMessengerTest extends TestCase
      */
     public function testSendDocument()
     {
-        $this->assertTrue($this->client->sendDocument(__DIR__."/../Assets/image.jpg"));
-        $this->assertTrue($this->client->sendDocument(__DIR__."/../Assets/image.jpg", __METHOD__));
-        $this->assertTrue($this->client->sendDocument(__DIR__."/../Assets/image.jpg", __METHOD__, $this->generateButtons()));
+        $this->assertTrue($this->client->sendDocument(static::$imageUrl));
+        $this->assertTrue($this->client->sendDocument(static::$imageUrl, __METHOD__));
+        $this->assertTrue($this->client->sendDocument(static::$imageUrl, __METHOD__, $this->generateButtons()));
 
         try {
-            $this->client->sendDocument(__DIR__ . "/../Assets/not_existed.jpg");
+            $this->client->sendDocument("invalid_url");
         } catch (\Exception $e) {
             $this->assertEquals(AttachmentNotFoundException::class, get_class($e));
         }
 
         $this->client->setTargetUser("123456");
-        $this->assertFalse($this->client->sendDocument(__DIR__."/../Assets/image.jpg"));
+        $this->assertFalse($this->client->sendDocument(static::$imageUrl));
 
         $this->client->setTargetUser(null);
         $this->expectException(TargetUserException::class);
-        $this->client->sendDocument(__DIR__."/../Assets/image.jpg");
+        $this->client->sendDocument(static::$imageUrl);
     }
 
     /**

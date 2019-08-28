@@ -83,55 +83,51 @@ class TelegramMessenger extends TelegramMessengerEvents implements MessengerInte
     /**
      * {@inheritdoc}
      *
-     * @param string $pathToFile
+     * @param string $fileUrl
      * @param string|null $description
      * @param array $buttons
      * @return bool
      * @throws AccessTokenException
-     * @throws AttachmentNotFoundException
      * @throws TargetUserException
      */
-    public function sendImage(string $pathToFile, string $description = null, array $buttons = []): bool
+    public function sendImage(string $fileUrl, string $description = null, array $buttons = []): bool
     {
-        return $this->workWithAttachment("image", $pathToFile, $description, $buttons);
+        return $this->workWithAttachment("image", $fileUrl, $description, $buttons);
     }
 
     /**
      * {@inheritdoc}
      *
-     * @param string $pathToFile
+     * @param string $fileUrl
      * @param string|null $description
      * @param array $buttons
      * @return bool
      * @throws AccessTokenException
-     * @throws AttachmentNotFoundException
      * @throws TargetUserException
      */
-    public function sendDocument(string $pathToFile, string $description = null, array $buttons = []): bool
+    public function sendDocument(string $fileUrl, string $description = null, array $buttons = []): bool
     {
-        return $this->workWithAttachment("document", $pathToFile, $description, $buttons);
+        return $this->workWithAttachment("document", $fileUrl, $description, $buttons);
     }
 
     /**
      * @param string $type
-     * @param $pathToFile
+     * @param $fileUrl
      * @param $description
      * @param $buttons
      * @return bool
      * @throws AccessTokenException
-     * @throws AttachmentNotFoundException
      * @throws TargetUserException
      */
-    private function workWithAttachment(string $type, $pathToFile, $description, $buttons): bool
+    private function workWithAttachment(string $type, $fileUrl, $description, $buttons): bool
     {
         $method = $type == "image" ? "sendPhoto" : "sendDocument";
         $this->checkRequirements();
-        $document = $this->prepareFile($pathToFile);
         try {
             $keyboard = $this->generateButtonMarkup($buttons);
             $result = $this->client->{$method}(
                 $this->getTargetUser(),
-                $document,
+                $fileUrl,
                 $description,
                 null,
                 $keyboard

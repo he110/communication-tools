@@ -41,23 +41,23 @@ interface MessengerInterface
      * Sends picture with caption (empty by default).
      * It can also send buttons
      *
-     * @param string $pathToFile - Static path to target file
+     * @param string $fileUrl - Valid image url
      * @param string|null $description - Caption text
      * @param array $buttons
      * @return bool
      */
-    public function sendImage(string $pathToFile, string $description = null, array $buttons = []): bool;
+    public function sendImage(string $fileUrl, string $description = null, array $buttons = []): bool;
 
     /**
      * Sends document with caption (empty by default).
      * It can also send buttons
      *
-     * @param string $pathToFile - Static path to target file
+     * @param string $fileUrl - Valid document url
      * @param string|null $description - Caption text
      * @param array $buttons
      * @return bool
      */
-    public function sendDocument(string $pathToFile, string $description = null, array $buttons = []): bool;
+    public function sendDocument(string $fileUrl, string $description = null, array $buttons = []): bool;
 
     /**
      * Tools for voice message sending
