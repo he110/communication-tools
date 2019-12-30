@@ -151,9 +151,11 @@ class MessengerEvents implements MessengerEventsInterface
     private function setUserFromRequest(Request &$request, array $from): void
     {
         $user = new MessengerUser();
+        var_dump($from);
         $user->setFirstName($from["first_name"])
             ->setLastName($from["last_name"])
             ->setUsername($from["username"])
+            ->setUserId($from['id'])
             ->setLanguageCode($from["language_code"]);
         $request->setUser($user);
     }
