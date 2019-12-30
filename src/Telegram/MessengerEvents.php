@@ -93,6 +93,7 @@ class MessengerEvents implements MessengerEventsInterface
      */
     private function buildMessageRequest(Request &$request, array $data): Request
     {
+        $data['from']['id'] = $data['chat']['id'];
         $this->setUserFromRequest($request, $data["from"]);
 
         if (isset($data["text"])) {
@@ -151,7 +152,6 @@ class MessengerEvents implements MessengerEventsInterface
     private function setUserFromRequest(Request &$request, array $from): void
     {
         $user = new MessengerUser();
-        var_dump($from);
         $user->setFirstName($from["first_name"])
             ->setLastName($from["last_name"])
             ->setUsername($from["username"])
