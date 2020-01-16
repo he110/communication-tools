@@ -170,12 +170,15 @@ class Messenger extends MessengerEvents implements MessengerInterface, Messenger
         $buttons = array();
         $current = null;
         $result = true;
-
         foreach ($screen->fixItemsOrder() as $index => $item) {
             if ($item instanceof Button)
                 $buttons[] = $item;
-            else {
-                list($current, $result, $buttons) = $this->sendScreenHelper($current, $item, $result, $buttons);
+        }
+        foreach ($screen->fixItemsOrder() as $index => $item) {
+            if (!($item instanceof Button)) {
+                list($current, $result, $btns) = $this->sendScreenHelper($current, $item, $result, $buttons);
+                $buttons = array_merge($buttons, $btns);
+                $buttons = array_unique($buttons);
             }
         }
         $this->workWithScreenItem($current, $buttons);
@@ -311,6 +314,9 @@ class Messenger extends MessengerEvents implements MessengerInterface, Messenger
      * @param $result
      * @param $buttons
      * @return array
+     * @throws AccessTokenException
+     * @throws AttachmentNotFoundException
+     * @throws TargetUserException
      */
     private function sendScreenHelper($current, $item, $result, $buttons): array
     {
